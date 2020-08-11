@@ -1,23 +1,23 @@
-# hello-world
+# front-end
 
 ## Project setup
 ```
-cnpm install
+npm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-cnpm run serve
+npm run serve
 ```
 
 ### Compiles and minifies for production
 ```
-cnpm run build
+npm run build
 ```
 
 ### Lints and fixes files
 ```
-cnpm run lint
+npm run lint
 ```
 
 ### Customize configuration

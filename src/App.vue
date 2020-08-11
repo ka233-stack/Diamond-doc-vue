@@ -1,20 +1,15 @@
 <template>
   <div id="app">
-    <HW msg="Vue-Cli"/>
+    <!-- 路由占位符 -->
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HW from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HW
-  }
+  name: 'app'
 }
 </script>
 
 <style>
-
 </style>

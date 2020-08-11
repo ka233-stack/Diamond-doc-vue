@@ -1,10 +1,26 @@
-import Vue from 'vue' // E56模块导入方式
-import App from './App.vue' // 独立测试区1
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import App from './App.vue'
+import router from './router'
+import './plugins/element.js'
+
+// 导入全局样式
+import './assets/css/global.css'
+
+// 配置axios
+import axios from 'axios'
+
+// 配置请求的根路径
+axios.defaults.baseURL = ''
+
+Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
 
-//--------------独立测试区1--------------
+Vue.use(ElementUI)
+
 new Vue({
-  render: h => h(App), //这个App组件(根组件)需要手动创建并引入
-  // render渲染
-}).$mount('#app') // new 一个Vue实例,挂载(mount)到节点上
+  router,
+  render: h => h(App)
+}).$mount('#app')
