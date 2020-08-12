@@ -35,9 +35,7 @@
           <!-- 按钮区域 -->
           <el-form-item>
             <!-- 登录按钮 -->
-            <el-button class="login_btn" type="primary" @click="login"
-              >登录</el-button
-            >
+            <el-button class="login_btn" @click="login">登录</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -46,9 +44,9 @@
         <div>没有账号？</div>
         <!-- 转到注册按钮 -->
         <div>
-          <el-button class="register_btn" type="primary" @click="gotoRegister"
-            >立即注册</el-button
-          >
+          <el-button class="register_btn" @click="gotoRegister">
+            <span>立即注册</span>
+          </el-button>
         </div>
       </div>
     </div>

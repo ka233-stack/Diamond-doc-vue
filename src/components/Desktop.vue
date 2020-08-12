@@ -5,31 +5,30 @@
       <h2>我的桌面</h2>
       <!-- 显示方式按钮组 -->
       <el-button-group>
-        <el-button type="primary" icon="el-icon-menu"></el-button>
-        <el-button type="primary" icon="el-icon-s-unfold"></el-button>
+        <el-button icon="el-icon-menu"></el-button>
+        <el-button icon="el-icon-s-unfold"></el-button>
       </el-button-group>
     </div>
     <!-- 文档区域 -->
     <div>
       <!-- 文档 -->
-    <div>
-      <!-- 文档图片 -->
-      <img src="../assets/doc.jpg" alt="文档" />
-      <!-- 文档管理下拉菜单 -->
-      <el-dropdown>
-        <!-- 按钮 -->
-        <el-button type="primary">
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button>
-        <!-- 下拉菜单 -->
-        <el-dropdown-menu slot="dropdown">
-          <!-- 恢复文件 -->
-          <el-dropdown-item @click="restoreFile">恢复文件</el-dropdown-item>
-          <!-- 彻底删除 -->
-          <el-dropdown-item @click="deleteFile">彻底删除</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
+      <div>
+        <!-- 文档图片 -->
+        <img src="../assets/doc.jpg" alt="文档" />
+        <!-- 文档管理下拉菜单 -->
+        <el-dropdown>
+          <!-- 按钮 -->
+          <el-button icon="el-icon-arrow-down">
+          </el-button>
+          <!-- 下拉菜单 -->
+          <el-dropdown-menu slot="dropdown">
+            <!-- 恢复文件 -->
+            <el-dropdown-item>222</el-dropdown-item>
+            <!-- 彻底删除 -->
+            <el-dropdown-item>222</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
   </div>
 </template>

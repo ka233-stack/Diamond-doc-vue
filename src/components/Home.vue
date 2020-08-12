@@ -69,7 +69,7 @@
             <span>我的桌面</span>
           </el-menu-item>
           <!-- 团队空间一级菜单 -->
-          <el-submenu>
+          <el-submenu index="">
             <!-- 一级菜单的模板区域 -->
             <template slot="title">
               <!-- 图标 -->
