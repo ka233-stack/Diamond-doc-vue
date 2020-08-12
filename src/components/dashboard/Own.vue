@@ -9,18 +9,18 @@
       <span>文档标题</span>
       <!-- 文档信息 -->
       <span>时间 编辑人 打开</span>
-      <!-- 文档管理下拉菜单 -->
       <el-dropdown>
-        <!-- 按钮 -->
-        <el-button icon="el-icon-setting"></el-button>
-        <!-- 下拉菜单 -->
-        <el-dropdown-menu slot="dropdown">
-          <!-- 恢复文件 -->
-          <el-dropdown-item @click="restoreFile">恢复文件</el-dropdown-item>
-          <!-- 彻底删除 -->
-          <el-dropdown-item @click="deleteFile">彻底删除</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+          <!-- 按钮 -->
+          <el-button icon="el-icon-arrow-down">
+          </el-button>
+          <!-- 下拉菜单 -->
+          <el-dropdown-menu slot="dropdown">
+            <!-- 恢复文件 -->
+            <el-dropdown-item>222</el-dropdown-item>
+            <!-- 彻底删除 -->
+            <el-dropdown-item>222</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
     </div>
   </div>
 </template>
