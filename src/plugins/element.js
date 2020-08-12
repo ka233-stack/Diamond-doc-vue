@@ -7,6 +7,7 @@ import {
   Message,
   Container,
   Header,
+  Footer,
   Aside,
   Main,
   Avatar,
@@ -18,7 +19,8 @@ import {
   Dropdown,
   DropdownItem,
   Badge,
-  DropdownMenu
+  DropdownMenu,
+  ButtonGroup
 } from 'element-ui'
 
 Vue.use(Button)
@@ -28,6 +30,7 @@ Vue.use(Input)
 Vue.use(Input)
 Vue.use(Container)
 Vue.use(Header)
+Vue.use(Footer)
 Vue.use(Aside)
 Vue.use(Main)
 Vue.use(Avatar)
@@ -40,6 +43,7 @@ Vue.use(Dropdown)
 Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(Badge)
+Vue.use(ButtonGroup)
 
 // 全局挂载弹窗
 Vue.prototype.$message = Message
