@@ -16,7 +16,9 @@ import {
   MenuItem,
   Divider,
   Dropdown,
-  DropdownItem
+  DropdownItem,
+  Badge,
+  DropdownMenu
 } from 'element-ui'
 
 Vue.use(Button)
@@ -36,6 +38,8 @@ Vue.use(MenuItem)
 Vue.use(Divider)
 Vue.use(Dropdown)
 Vue.use(DropdownItem)
+Vue.use(DropdownMenu)
+Vue.use(Badge)
 
 // 全局挂载弹窗
 Vue.prototype.$message = Message
