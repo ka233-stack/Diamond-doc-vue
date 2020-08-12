@@ -46,7 +46,7 @@
         <div>没有账号？</div>
         <!-- 转到注册按钮 -->
         <div>
-          <el-button class="register_btn" type="primary" @click="gotoregister"
+          <el-button class="register_btn" type="primary" @click="gotoRegister"
             >立即注册</el-button
           >
         </div>
@@ -87,7 +87,7 @@ export default {
       // 登录成功跳转
     },
     // 转到注册
-    gotoregister() {
+    gotoRegister() {
       this.$router.push('/register')
     }
   }
