@@ -5,11 +5,9 @@ import Register from '../components/Register.vue'
 import Welcome from '../components/Welcome.vue'
 import Home from '../components/Home.vue'
 import Dashboard from '../components/Dashboard.vue'
-import Used from '../components/dashboard/Used.vue'
-import Own from '../components/dashboard/Own.vue'
-import Favorite from '../components/dashboard/Favorite.vue'
 import Desktop from '../components/Desktop.vue'
 import Trash from '../components/Trash.vue'
+import Doc from '../components/Doc.vue'
 
 Vue.use(VueRouter)
 
@@ -34,21 +32,16 @@ const routes = [
       // 将Dashboard子组件渲染到/dashboard
       {
         path: '/dashboard',
-        component: Dashboard,
-        redirect: '/dashboard/used',
-        // 子路由
-        children: [
-          { path: '/dashboard/used', component: Used },
-          { path: '/dashboard/own', component: Own },
-          { path: '/dashboard/favorite', component: Favorite }
-        ]
+        component: Dashboard
       },
       // 将Desktop子组件渲染到/desktop
       { path: '/desktop', component: Desktop },
       // 将Trash组件渲染到/trash
       { path: '/trash', component: Trash }
     ]
-  }
+  },
+  // 将Doc组件渲染到/doc
+  { path: '/doc', component: Doc }
 ]
 
 const router = new VueRouter({
