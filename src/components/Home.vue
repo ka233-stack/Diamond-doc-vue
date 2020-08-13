@@ -1,62 +1,86 @@
 <template>
   <el-container class="desktop-container">
     <!-- 头部区域-->
-    <el-header>
+    <el-header class="nav">
       <div class="header-left">
-        <img src="../assets/logo.png" alt="金刚石文档logo" />
-        <router-link to="/">
-          <span>金刚石文档</span>
-        </router-link>
+        <div>
+          <router-link to="/">
+            <img src="../assets/logo.png" alt="金刚石文档logo" />
+          </router-link>
+        </div>
+        <div>
+          <router-link to="/">
+            <span>金刚石文档</span>
+          </router-link>
+        </div>
       </div>
       <div class="header-right">
-        <!-- 顶部搜索框 -->
-        <el-input
-          prefix-icon="el-icon-search"
-          v-model="searchInput"
-          placeholder="搜索文件"
-          clearable
-        >
-        </el-input>
-        <!-- 通知 -->
-        <el-badge :value="12" class="item">
-          <el-button icon="el-icon-bell" circle></el-button>
-        </el-badge>
-        <!-- 头像下拉菜单 -->
-        <el-dropdown>
-          <!-- 头像 -->
-          <el-button circle
-            ><img src="../assets/avatar.png" alt="用户头像"
-          /></el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>
-              账号设置
-            </el-dropdown-item>
-            <el-dropdown-item>
-              前往官网
-            </el-dropdown-item>
-            <el-dropdown-item>
-              获取帮助
-            </el-dropdown-item>
-            <el-dropdown-item>
-              退出登录
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <div class="search">
+          <!-- 顶部搜索框 -->
+          <el-input
+            prefix-icon="el-icon-search"
+            v-model="searchInput"
+            placeholder="搜索文件"
+            clearable
+          ></el-input>
+        </div>
+        <div class="item">
+          <!-- 通知框 -->
+          <el-popover placement="bottom" width="200" trigger="hover">
+            <div>
+              <h2>
+                通知
+              </h2>
+              <el-link>默认链接</el-link>
+            </div>
+            <el-badge :value="12" slot="reference">
+              <!-- 通知图标 -->
+              <el-button
+                icon="el-icon-bell"
+                circle
+              ></el-button>
+            </el-badge>
+          </el-popover>
+        </div>
+        <div class="nav-dropdown">
+          <!-- 头像下拉菜单 -->
+          <el-dropdown>
+            <!-- 头像 -->
+            <el-button class="nav-avatar" circle>
+              <img src="../assets/avatar.png" alt="用户头像" />
+            </el-button>
+            <el-dropdown-menu class="dropdown-menu" slot="dropdown">
+              <el-dropdown-item @click.native="setAccount">
+                <span>账号设置</span>
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="gotoWelcome">
+                <span>前往官网</span>
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="getHelp">
+                <span>获取帮助</span>
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="logout">
+                <span>退出登录</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </div>
     </el-header>
     <!-- 页面主体区域 -->
     <el-container>
       <!-- 侧边栏区域 -->
-      <el-aside width="200px">
+      <el-aside width="250px">
         <!-- 侧边栏菜单区域 -->
         <el-menu
-          background-color="#e6e6e6"
-          text-color="#7D7D7D"
-          active-text-color="#000"
+          background-color="rgb(85, 85, 85)"
+          text-color="white"
+          active-text-color="rgb(85, 85, 85)"
           :router="true"
+          :default-active="activePath"
         >
           <!-- 区域1 -->
-          <el-menu-item index="/dashboard">
+          <el-menu-item index="/dashboard" @click="saveNavState('/dashboard')">
             <i class="el-icon-files"></i>
             <span>工作台</span>
           </el-menu-item>
@@ -64,7 +88,7 @@
           <el-divider></el-divider>
           <!-- 区域2 -->
           <!-- 我的桌面 -->
-          <el-menu-item index="/desktop">
+          <el-menu-item index="/desktop" @click="saveNavState('/desktop')">
             <i class="el-icon-house"></i>
             <span>我的桌面</span>
           </el-menu-item>
@@ -79,7 +103,7 @@
             </template>
             <!-- 团队空间二级菜单 -->
             <el-menu-item-group>
-              <el-menu-item index="3-1">
+              <el-menu-item index="3-1" @click="saveNavState('')">
                 <!-- 文本 -->
                 <span>空间名称</span>
               </el-menu-item>
@@ -93,7 +117,7 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="/trash">
+          <el-menu-item index="/trash" @click="saveNavState('/trash')">
             <i class="el-icon-delete"></i>
             <span>回收站</span>
           </el-menu-item>
@@ -106,7 +130,7 @@
           </el-menu-item>
         </el-menu>
         <!-- 添加团队空间按钮 -->
-        <el-button @click="createTeamSpace">
+        <el-button class="addmember" @click="createTeamSpace">
           <i class="el-icon-plus"></i>
         </el-button>
       </el-aside>
@@ -116,7 +140,7 @@
         <router-view></router-view>
         <!-- 右侧按钮区域 -->
         <div>
-          <el-button @click="createNewDoc">
+          <el-button class="newdoc" @click="createNewDoc">
             <span>新建文档</span>
           </el-button>
         </div>
@@ -132,21 +156,37 @@ export default {
     return {
       // 左侧菜单数据
       teamList: [],
-      searchInput: ''
+      searchInput: '',
+      // 左侧导航被激活的链接地址
+      activePath: ''
     }
   },
-  created() {},
+  created() {
+    this.activePath = window.sessionStorage.getItem('activePath')
+  },
   methods: {
     // 获取所有的菜单
     async getTeamList() {
       // get请求
     },
+    // 账号设置
+    setAccount() {
+      this.$router.push('/')
+    },
+    // 前往官网
+    gotoWelcome() {
+      this.$router.push('/')
+    },
+    // 获取帮助
+    getHelp() {
+      this.$router.push('/')
+    },
     // 退出登录
     logout() {
       // 清除token
-      window.sessionStorage.removeItem('token')
-      // 跳转到登录界面
-      this.$router.push('/login')
+      // window.sessionStorage.removeItem('token')
+      // 跳转到h/
+      this.$router.push('/')
     },
     alert() {
       alert('111')
@@ -159,40 +199,178 @@ export default {
     // 新建文档
     createNewDoc() {
       // 跳转至文档页
+    },
+    // 保存链接的激活状态
+    saveNavState(activePath) {
+      // 在sessionStorage中存储
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
     }
   }
 }
 </script>
 <style lang="less" scoped>
 .desktop-container {
+  width: 100%;
   height: 100%;
-}
-.router-link-active {
-  text-decoration: none;
+  background-color: white;
 }
 .el-header {
-  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  background-color: white;
   display: flex;
   justify-content: space-between;
-  padding-left: 0px;
   align-items: center;
-  > div {
-    display: flex;
-    align-items: center;
-    font-size: 20px;
-    span {
-      margin-left: 15px;
-    }
-  }
 }
-.el-aside {
-  background-color: #e6e6e6;
+.nav {
+  height: 50px !important;
+  background-color: white;
 }
-.el-main {
-  background-color: #f7f7f7;
+.header-left {
+  width: 250px;
+  height: 50px;
+  display: flex;
+  justify-items: flex-start;
+  align-items: center;
+}
+.header-left img {
+  width: 40px;
+  height: 40px;
+  margin-left: 20px;
+}
+.header-left span {
+  width: 100px;
+  height: 40px;
+  margin-left: 10px;
+  display: inline-block;
+  text-align: center;
+  line-height: 40px;
+  font-size: 18px;
+}
+.header-right {
+  width: 400px;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.search {
+  width: 200px;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+/deep/ .search .el-input__inner {
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+  color: rgb(85, 85, 85);
+  font-size: 15px;
+  border: none;
+  border-radius: 30px;
+  box-shadow: inset 0 0 3px rgb(124, 124, 124);
+  transition: 0.1s linear;
+  -webkit-transition: 0.1s linear;
+}
+/deep/ .el-input__inner:hover {
+  box-shadow: inset 0 0 6px rgb(189, 189, 189);
+  transition: 0.2s linear;
+  -webkit-transition: 0.2s linear;
+}
+/deep/ .el-input__inner:focus {
+  box-shadow: inset 0 0 10px rgb(165, 165, 165);
 }
 .item {
-  margin-top: 10px;
-  margin-right: 40px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.item .el-button {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(124, 124, 124);
+  border: solid 1px rgb(124, 124, 124);
+}
+.item .el-button:hover {
+  background-color: whitesmoke;
+}
+.nav-dropdown {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav-avatar {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+.nav-avatar img {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  border: solid 1px rgb(124, 124, 124);
+}
+.dropdown-menu {
+  width: 100px;
+  height: 200px;
+  margin: 0;
+  padding-top: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: white;
+  background-color: rgb(85, 85, 85);
+}
+.el-aside {
+  padding-top: 20px;
+  background-color: rgb(85, 85, 85);
+}
+.el-menu-item.is-active {
+  background-color: whitesmoke !important;
+}
+.addmember {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 248px;
+  left: 180px;
+  color: rgb(143, 143, 143);
+  background-color: transparent;
+  border-radius: 100%;
+  border-color: rgb(143, 143, 143);
+}
+.el-main {
+  background-color: whitesmoke;
+}
+.newdoc {
+  width: 200px;
+  height: 50px;
+  margin-top: 20px;
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 1px;
+  background-color: rgb(85, 85, 85);
 }
 </style>

@@ -10,12 +10,9 @@
         </div>
         <div class="header-right">
           <!-- 注册按钮 -->
-          <el-avatar
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-          ></el-avatar>
-          <el-button @click='register'>开始注册</el-button>
+          <el-button @click="register">开始注册</el-button>
           <!-- 登录按钮 -->
-          <el-button @click='login'>登录</el-button>
+          <el-button @click="login">登录</el-button>
           <!-- 工作台按钮（登录后） -->
         </div>
       </el-header>
