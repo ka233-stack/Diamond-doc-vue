@@ -20,7 +20,12 @@ import {
   DropdownItem,
   Badge,
   DropdownMenu,
-  ButtonGroup
+  ButtonGroup,
+  Card,
+  Popover,
+  Table,
+  Link,
+  TableColumn
 } from 'element-ui'
 
 Vue.use(Button)
@@ -44,6 +49,11 @@ Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(Badge)
 Vue.use(ButtonGroup)
+Vue.use(Card)
+Vue.use(Popover)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Link)
 
 // 全局挂载弹窗
 Vue.prototype.$message = Message
