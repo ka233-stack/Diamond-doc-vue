@@ -25,7 +25,11 @@ import {
   Popover,
   Table,
   Link,
-  TableColumn
+  TableColumn,
+  Pagination,
+  Breadcrumb,
+  BreadcrumbItem,
+  Dialog
 } from 'element-ui'
 
 Vue.use(Button)
@@ -54,6 +58,10 @@ Vue.use(Popover)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Link)
+Vue.use(Pagination)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Dialog)
 
 // 全局挂载弹窗
 Vue.prototype.$message = Message
