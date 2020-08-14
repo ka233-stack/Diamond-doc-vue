@@ -1,49 +1,70 @@
 <template>
-  <div class='register_container'>
+  <div class="register_container">
     <!-- 注册组件 -->
-    <div class='register_box'>
+    <div class="register_box">
       <!-- 标题区域 -->
-      <div class='registerTitle'>
+      <div class="registerTitle">
         <h2>注册</h2>
       </div>
       <!-- 注册表单区域 -->
-      <div class='registerForm'>
+      <div class="registerForm">
         <el-form
-        ref='registerFormRef'
-        :model='registerForm'
-        :rules='registerFormRules'
-        label-width='0px'
-        class='register_form'
+          ref="registerFormRef"
+          :model="registerForm"
+          :rules="registerFormRules"
+          label-width="0px"
+          class="register_form"
         >
           <!-- 用户名 -->
-          <el-form-item prop='username'>
-            <el-input v-model='registerForm.username' prefix-icon='el-icon-user' placeholder='用户名'></el-input>
+          <el-form-item prop="username">
+            <el-input
+              v-model="registerForm.username"
+              prefix-icon="el-icon-user"
+              placeholder="用户名"
+            ></el-input>
           </el-form-item>
           <!-- 邮箱 -->
-          <el-form-item prop='email'>
-            <el-input v-model='registerForm.email' prefix-icon='el-icon-message' type='email' placeholder='邮箱'></el-input>
+          <el-form-item prop="email">
+            <el-input
+              v-model="registerForm.email"
+              prefix-icon="el-icon-message"
+              type="email"
+              placeholder="邮箱"
+            ></el-input>
           </el-form-item>
           <!-- 密码 -->
-          <el-form-item prop='password1'>
-            <el-input v-model='registerForm.password' prefix-icon='el-icon-lock' type='password' placeholder='密码'></el-input>
+          <el-form-item prop="password1">
+            <el-input
+              v-model="registerForm.password1"
+              prefix-icon="el-icon-lock"
+              type="password"
+              placeholder="密码"
+            ></el-input>
           </el-form-item>
           <!-- 确认密码 -->
-          <el-form-item prop='password2'>
-            <el-input v-model='registerForm.password' prefix-icon='el-icon-lock' type='password' placeholder='确认密码'></el-input>
+          <el-form-item prop="password2">
+            <el-input
+              v-model="registerForm.password2"
+              prefix-icon="el-icon-lock"
+              type="password"
+              placeholder="确认密码"
+            ></el-input>
           </el-form-item>
           <!-- 按钮区域 -->
           <el-form-item>
             <!-- 登录按钮 -->
-            <el-button class='register_btn' type='primary' @click='register'>注册</el-button>
+            <el-button class="register_btn" @click="register">注册</el-button>
           </el-form-item>
         </el-form>
       </div>
       <!-- 提示 -->
-      <div class='loginPropt'>
+      <div class="loginPropt">
         <div>已有帐号？</div>
         <!-- 转到登录按钮 -->
         <div>
-          <el-button class="login_btn" type='primary' @click='gotologin'>立即登录</el-button>
+          <el-button class="login_btn" type="primary" @click="gotoLogin"
+            >立即登录</el-button
+          >
         </div>
       </div>
     </div>
@@ -51,7 +72,25 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
+    // 验证两次密码一致的函数
+    var checkPassword2 = (rule, value, callback) => {
+      if (value !== this.registerForm.password1) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
+    // 验证邮箱格式的函数
+    var checkEmail = (rule, value, callback) => {
+      // 验证邮箱格式的正则表达式
+      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+      if (!regEmail.test(value)) {
+        callback(new Error('请输入合法的邮箱'))
+      } else {
+        callback()
+      }
+    }
     return {
       // 注册表单的数据绑定对象
       registerForm: {
@@ -69,37 +108,49 @@ export default {
         ],
         // 验证邮箱是否合法
         email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' }
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
         ],
         // 验证密码是否合法
         password1: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
         ],
-        // 验证两次密码是否相同
+        // 验证二次密码是否合法
         password2: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+          {
+            min: 6,
+            max: 16,
+            message: '长度在 6 到 16 个字符',
+            trigger: 'blur'
+          },
+          { validator: checkPassword2, trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
     // 注册
-    register () {
-      // 判断合法
-      // 发送数据并接收返回信息
-      // 注册失败弹窗提示(Message)
-      // 注册成功跳转
+    register() {
+      this.$refs.registerFormRef.validate(valid => {
+        // 校验失败
+        if (!valid) return
+        // 判断合法
+        // 发送数据并接收返回信息
+        // 注册失败弹窗提示(element-ui Message)
+        // 注册成功跳转
+        this.$router.push('/dashboard')
+      })
     },
     // 转到登录
-    gotologin () {
+    gotoLogin() {
       this.$router.push('/login')
     }
   }
 }
 </script>
-<style lang='less' scoped>
+<style lang="less" scoped>
 .register_container {
   width: 100%;
   height: 100%;
@@ -107,7 +158,7 @@ export default {
   position: absolute;
   background: url(../assets/lr_backsrc.jpg) no-repeat;
   background-size: 100% 100%;
-  background-attachment:fixed;
+  background-attachment: fixed;
 }
 .register_box {
   width: 400px;
@@ -162,13 +213,13 @@ export default {
   border: none;
   border-radius: 1px;
   box-shadow: inset 0 0 6px rgb(224, 224, 224);
-  transition: .1s linear;
-  -webkit-transition: .1s linear;
+  transition: 0.1s linear;
+  -webkit-transition: 0.1s linear;
 }
 /deep/ .el-input__inner:hover {
   box-shadow: inset 0 0 8px rgb(189, 189, 189);
-  transition: .2s linear;
-  -webkit-transition: .2s linear;
+  transition: 0.2s linear;
+  -webkit-transition: 0.2s linear;
 }
 /deep/ .el-input__inner:focus {
   box-shadow: inset 0 0 12px rgb(165, 165, 165);
@@ -216,7 +267,7 @@ export default {
   text-indent: 1px;
   border: none;
   border-radius: 1px;
-  background-color:white;
+  background-color: white;
 }
 .login_btn:hover {
   font-weight: 700;
@@ -225,7 +276,7 @@ export default {
 .login_btn:active {
   font-weight: 700;
   color: white;
-  background-color:rgb(85, 85, 85);
+  background-color: rgb(85, 85, 85);
   box-shadow: none;
 }
 </style>

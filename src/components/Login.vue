@@ -71,7 +71,7 @@ export default {
         // 验证密码是否合法
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
         ]
       }
     }
@@ -79,10 +79,15 @@ export default {
   methods: {
     // 登录
     login() {
-      // 判断合法
-      // 发送数据并接收返回信息
-      // 登录失败弹窗提示(Message)
-      // 登录成功跳转
+      this.$refs.loginFormRef.validate(valid => {
+        // 校验失败
+        if (!valid) return
+        // 判断合法
+        // 发送数据并接收返回信息
+        // 登录失败弹窗提示(element-ui Message)
+        // 登录成功跳转
+        this.$router.push('/dashboard')
+      })
     },
     // 转到注册
     gotoRegister() {

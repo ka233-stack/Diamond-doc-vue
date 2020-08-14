@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
+  <div>
     <!-- 头部区域 -->
     <div class="header">
-      <h2>我的桌面</h2>
+      <!-- 团队空间名称 -->
+      <h2>{{teamInfo.teamName}}</h2>
     </div>
-    <!-- 文档区域 -->
-    <div class="docList">
-      <!-- 文档列表 -->
+    <!-- 文档显示区域 -->
+    <div>
       <el-table
         :data="docList"
         :default-sort="{ prop: 'title', order: 'ascending' }"
@@ -73,11 +73,16 @@
 <script>
 // export 表示导出,在自定义组件里面使用export default导出
 export default {
-  name: 'desktop',
-  // name 表示设置别名，可以不设置，建议和组件的名称一致
   components: {},
   data() {
     return {
+      // 团队信息
+      teamInfo: {
+        teamId: '1',
+        teamName: '123123',
+        teamCreator: '顺丰到付',
+        teamMemberList: [{}]
+      },
       // 文档列表信息
       docListInfo: {
         query: '',
@@ -96,7 +101,7 @@ export default {
       // 文档列表
       docList: [
         {
-          docId: 1,
+          id: 1,
           isFavorite: true,
           title: '文档名2',
           owner: '王小虎1',
@@ -105,7 +110,7 @@ export default {
           lastEditor: '王小2'
         },
         {
-          docId: 3,
+          id: 3,
           isFavorite: false,
           title: '文档名4',
           owner: '王小虎2',
@@ -114,7 +119,7 @@ export default {
           lastEditor: '王小3'
         },
         {
-          docId: 2,
+          id: 2,
           isFavorite: false,
           title: '文档名1',
           owner: '王小虎3',
@@ -123,7 +128,7 @@ export default {
           lastEditor: '王小4'
         },
         {
-          docId: 6,
+          id: 6,
           isFavorite: true,
           title: '文档名3',
           owner: '王小虎4',
@@ -134,8 +139,17 @@ export default {
       ]
     }
   },
-  created() {},
+  mounted() {},
   methods: {
+    // 获取我创建的的文档
+    getOwn() {
+      // 发送数据
+      // 高亮激活
+      // 渲染
+    },
+    alert() {
+      alert('111')
+    },
     // 打开文档
     openDoc() {
       alert('111')
@@ -189,6 +203,7 @@ export default {
         type: 'success'
       })
     },
+
     // 监听pageSize的改变
     handleSizeChange(newSize) {
       this.docListInfo.pageSize = newSize
@@ -204,65 +219,28 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.container {
-  width: 65%;
-  max-height: 800px;
-  position: absolute;
-  left: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  transform: translateX(-50%);
-  -webkit-transform: translateX(-50%);
+.desktop-container {
+  height: 100%;
 }
-.header {
-  width: 100%;
-  height: 50px;
+.el-header {
+  background-color: #fff;
   display: flex;
   justify-content: space-between;
+  padding-left: 0px;
   align-items: center;
+  > div {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    span {
+      margin-left: 15px;
+    }
+  }
 }
-.doclist {
-  width: 1200px;
-  margin-top: 30px;
+.el-aside {
+  background-color: #e6e6e6;
 }
-.template {
-  width: 300px;
-  height: 100px;
-  position: relative;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: white;
-  box-shadow: 0 0 4px rgb(206, 206, 206);
-}
-.img-doc {
-  width: 60px;
-  height: 60px;
-  margin: 0 20px;
-}
-.menu {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-size: 14px;
-}
-.menu .info {
-  width: 100%;
-  margin: 3px 0;
-  color: rgb(172, 172, 172);
-}
-.el-dropdown .el-button {
-  width: 30px;
-  height: 30px;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  right: 10px;
-  border: none;
-  background-color: transparent;
+.el-main {
+  background-color: #f7f7f7;
 }
 </style>

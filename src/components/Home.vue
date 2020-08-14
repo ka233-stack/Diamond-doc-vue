@@ -35,10 +35,7 @@
             </div>
             <el-badge :value="12" slot="reference">
               <!-- 通知图标 -->
-              <el-button
-                icon="el-icon-bell"
-                circle
-              ></el-button>
+              <el-button icon="el-icon-bell" circle></el-button>
             </el-badge>
           </el-popover>
         </div>
@@ -50,7 +47,7 @@
               <img src="../assets/avatar.png" alt="用户头像" />
             </el-button>
             <el-dropdown-menu class="dropdown-menu" slot="dropdown">
-              <el-dropdown-item @click.native="setAccount">
+              <el-dropdown-item @click.native="gotoProfile">
                 <span>账号设置</span>
               </el-dropdown-item>
               <el-dropdown-item @click.native="gotoWelcome">
@@ -103,17 +100,14 @@
             </template>
             <!-- 团队空间二级菜单 -->
             <el-menu-item-group>
-              <el-menu-item index="3-1" @click="saveNavState('')">
-                <!-- 文本 -->
-                <span>空间名称</span>
-              </el-menu-item>
               <el-menu-item
-                :index="item.id + ''"
-                v-for="item in teamList"
-                :key="item.id"
+                @click="saveNavState('')"
+                v-for="team in teamList"
+                :key="team.id"
+                :index="'/space/' + team.teamId"
               >
                 <!-- 文本 -->
-                <span>{{ item.spaceName }}</span>
+                <span>{{ team.teamName }}</span>
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
@@ -130,9 +124,34 @@
           </el-menu-item>
         </el-menu>
         <!-- 添加团队空间按钮 -->
-        <el-button class="addmember" @click="createTeamSpace">
+        <el-button class="addmember" @click="addDialogVisible = true">
           <i class="el-icon-plus"></i>
         </el-button>
+
+        <!-- 添加团队空间对话框 -->
+        <el-dialog
+          title="新建团队空间"
+          :visible.sync="addDialogVisible"
+          width="40%"
+          @close="addDialogClosed"
+        >
+          <!-- 内容主体区域 -->
+          <el-form
+            :model="addSpace"
+            :rules="addSpaceRules"
+            ref="addSpaceRef"
+            label-width="100px"
+          >
+            <el-form-item label="空间名称" prop="spaceName">
+              <el-input v-model="addSpace.spaceName"></el-input>
+            </el-form-item>
+          </el-form>
+          <!-- 底部区域 -->
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="addDialogVisible = false">取 消</el-button>
+            <el-button @click="createTeamSpace">确 定</el-button>
+          </span>
+        </el-dialog>
       </el-aside>
       <!-- 内容主体区域 -->
       <el-main>
@@ -155,23 +174,48 @@ export default {
   data() {
     return {
       // 左侧菜单数据
-      teamList: [],
+      teamList: [
+        {
+          teamId: 1,
+          teamName: '团队空间1'
+        },
+        {
+          teamId: 2,
+          teamName: '团队空间2'
+        },
+        {
+          teamId: 3,
+          teamName: '团队空间3'
+        }
+      ],
       searchInput: '',
       // 左侧导航被激活的链接地址
-      activePath: ''
+      activePath: '',
+      // 添加团队空间对话框的可见属性
+      addDialogVisible: false,
+      // 添加团队空间的表单对象
+      addSpace: {
+        // 空间名称
+        spaceName: ''
+      },
+      // 添加团队空间的验证规则对象
+      addSpaceRules: {
+        spaceName: [
+          { required: true, message: '名称不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
-  created() {
-    this.activePath = window.sessionStorage.getItem('activePath')
-  },
+  created() {},
+  mounted() {},
   methods: {
-    // 获取所有的菜单
+    // 获取团队列表
     async getTeamList() {
       // get请求
     },
     // 账号设置
-    setAccount() {
-      this.$router.push('/')
+    gotoProfile() {
+      this.$router.push('/profile')
     },
     // 前往官网
     gotoWelcome() {
@@ -193,18 +237,39 @@ export default {
     },
     // 新建团队空间
     createTeamSpace() {
-      // 消息弹框
-      // 判断空间名称是否重复
+      this.$refs.addSpaceRef.validate(valid => {
+        // 校验失败
+        if (!valid) return
+        // 发起添加团队空间的网络请求
+        // 判断是否创建成功
+        // 创建失败if
+        // 创建成功
+        // 隐藏对话框
+        this.addDialogVisible = false
+        // 创建成功提示
+        this.$message({
+          showClose: true,
+          message: '创建团队空间成功',
+          type: 'success'
+        })
+        // 重新获取团队空间列表
+        this.getTeamList()
+      })
     },
     // 新建文档
     createNewDoc() {
       // 跳转至文档页
+      this.$router.push('/docs')
     },
     // 保存链接的激活状态
     saveNavState(activePath) {
       // 在sessionStorage中存储
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath
+    },
+    // 监听新建团队空间对话框的关闭事件
+    addDialogClosed() {
+      this.$refs.addSpaceRef.resetFields()
     }
   }
 }
@@ -248,6 +313,10 @@ export default {
   line-height: 40px;
   font-size: 18px;
 }
+.header-left .router-link-active {
+  color: rgb(85, 85, 85);
+  text-decoration: none;
+}
 .header-right {
   width: 400px;
   height: 50px;
@@ -262,13 +331,13 @@ export default {
   height: 50px;
   margin: 0;
   padding: 0;
+  margin-right: 10px;
   display: flex;
   align-items: center;
 }
 /deep/ .search .el-input__inner {
   width: 200px;
   height: 30px;
-  line-height: 30px;
   color: rgb(85, 85, 85);
   font-size: 15px;
   border: none;
@@ -326,16 +395,12 @@ export default {
   border: solid 1px rgb(124, 124, 124);
 }
 .dropdown-menu {
-  width: 100px;
-  height: 200px;
   margin: 0;
   padding-top: 5px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  color: white;
-  background-color: rgb(85, 85, 85);
 }
 .el-aside {
   padding-top: 20px;
