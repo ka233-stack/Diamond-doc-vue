@@ -8,12 +8,14 @@ import Dashboard from '../components/Dashboard.vue'
 import Desktop from '../components/Desktop.vue'
 import Trash from '../components/Trash.vue'
 import Doc from '../components/Doc.vue'
+import Space from '../components/Space.vue'
+import Profile from '../components/Profile.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   // 将重定向到根路径
-  { path: '*', redirect: '/' },
+  // { path: '*', redirect: '/' },
   // 将根路径重定向到/welcome
   { path: '/', redirect: '/welcome' },
   // 将Welcome组件渲染到/welcome
@@ -22,6 +24,8 @@ const routes = [
   { path: '/login', component: Login },
   // 将Register组件渲染到/register
   { path: '/register', component: Register },
+  // 将Profile组件渲染到/profile
+  { path: '/profile', component: Profile },
   // 将Home组件渲染到/home
   {
     path: '/home',
@@ -37,11 +41,13 @@ const routes = [
       // 将Desktop子组件渲染到/desktop
       { path: '/desktop', component: Desktop },
       // 将Trash组件渲染到/trash
-      { path: '/trash', component: Trash }
+      { path: '/trash', component: Trash },
+      // 将Space组件渲染到/space/id
+      { path: '/space/:id', component: Space }
     ]
   },
   // 将Doc组件渲染到/doc
-  { path: '/doc', component: Doc }
+  { path: '/doc/:id', component: Doc }
 ]
 
 const router = new VueRouter({
