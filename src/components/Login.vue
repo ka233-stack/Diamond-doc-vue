@@ -56,11 +56,16 @@
 export default {
   data() {
     return {
+      // 表单数据-------------------------------------------------------------------
+
       // 登录表单的数据绑定对象
       loginForm: {
         username: '',
         password: ''
       },
+
+      // 验证规则-------------------------------------------------------------------
+
       // 登录表单的验证规则对象
       loginFormRules: {
         // 验证用户名是否合法
@@ -76,22 +81,42 @@ export default {
       }
     }
   },
+  created() {
+    // 检查登录状态
+    this.checkLogin()
+  },
   methods: {
     // 登录
     login() {
-      this.$refs.loginFormRef.validate(valid => {
+      this.$refs.loginFormRef.validate(async valid => {
         // 校验失败
         if (!valid) return
-        // 判断合法
         // 发送数据并接收返回信息
-        // 登录失败弹窗提示(element-ui Message)
-        // 登录成功跳转
-        this.$router.push('/dashboard')
+        const { data: res } = await this.$http.post('/login/', this.loginForm)
+        if (res === '登录失败') {
+          // 登录失败弹窗提示
+          this.$message.error(res)
+        } else {
+          // 登录成功跳转
+          // token=res
+          window.sessionStorage.setItem('token', res)
+          this.$message.success('登陆成功')
+          this.$router.push('/dashboard')
+        }
       })
     },
+
     // 转到注册
     gotoRegister() {
       this.$router.push('/register')
+    },
+
+    // 检查登录状态
+    checkLogin() {
+      console.log(window.sessionStorage.getItem('token'))
+      if (window.sessionStorage.getItem('token') !== null) {
+        this.$router.push('/dashboard')
+      }
     }
   }
 }

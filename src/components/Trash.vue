@@ -5,9 +5,10 @@
       <h2>回收站</h2>
       <div>
         <!-- 清空回收站按钮 -->
-        <el-button @click="deleteAll">清空回收站</el-button>
+        <el-button @click="deleteAllDialogVisible">清空回收站</el-button>
       </div>
     </div>
+
     <!-- 文档区域 -->
     <div class="docList">
       <!-- 文档列表 -->
@@ -18,7 +19,7 @@
         <el-table-column prop="title" label="文件名" sortable width="180">
         </el-table-column>
         <el-table-column
-          prop="lastEditor"
+          prop="lasteditor"
           label="删除时间"
           sortable
           width="180"
@@ -43,6 +44,7 @@
         </el-table-column>
       </el-table>
     </div>
+
     <!-- 分页区域 -->
     <div>
       <el-pagination
@@ -56,6 +58,20 @@
       >
       </el-pagination>
     </div>
+
+    <!-- 清空回收站对话框 -->
+    <el-dialog
+      title="清空回收站"
+      :visible.sync="deleteAllDialogVisible"
+      width="30%"
+      center
+    >
+      <span>回收站中所有文件将会被彻底删除</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteAllDialogVisible = false">取 消</el-button>
+        <el-button type="danger" @click="deleteAll">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -64,6 +80,8 @@ export default {
   components: {},
   data() {
     return {
+      // 存储数据-------------------------------------------------------------------
+
       // 文档列表信息
       docListInfo: {
         query: '',
@@ -79,69 +97,57 @@ export default {
         // 每页显示的文档数
         total: 32
       },
+
       // 文档列表
       docList: [
         {
           docId: 1,
           isFavorite: true,
           title: '文档名2',
-          owner: '王小虎1',
-          creationTime: '05-02 10：12',
-          lastEditTime: '05-02 10：12',
-          lastEditor: '王小2'
+          nickname: '王小虎1',
+          createtime: '05-02 10：12',
+          updatetime: '05-02 10：12',
+          lasteditor: '王小2'
         },
         {
           docId: 3,
           isFavorite: false,
           title: '文档名4',
-          owner: '王小虎2',
-          creationTime: '05-02 10：12',
-          lastEditTime: '05-02 10：41',
-          lastEditor: '王小3'
+          nickname: '王小虎2',
+          createtime: '05-02 10：12',
+          updatetime: '05-02 10：41',
+          lasteditor: '王小3'
         },
         {
           docId: 2,
           isFavorite: false,
           title: '文档名1',
-          owner: '王小虎3',
-          creationTime: '05-02 10：12',
-          lastEditTime: '05-02 10：51',
-          lastEditor: '王小4'
+          nickname: '王小虎3',
+          createtime: '05-02 10：12',
+          updatetime: '05-02 10：51',
+          lasteditor: '王小4'
         },
         {
           docId: 6,
           isFavorite: true,
           title: '文档名3',
-          owner: '王小虎4',
-          creationTime: '05-02 10：12',
-          lastEditTime: '05-02 10：01',
-          lastEditor: '王小1'
+          nickname: '王小虎4',
+          createtime: '05-02 10：12',
+          updatetime: '05-02 10：01',
+          lasteditor: '王小1'
         }
-      ]
+      ],
+
+      // 对话框的可见属性------------------------------------------------------------
+
+      // 清空回收站对话框的可见属性
+      deleteAllDialogVisible: false
     }
   },
   mounted() {},
   methods: {
     // 清空回收站
     deleteAll() {
-      // 弹窗确认
-      this.$confirm('将删除回收站中全部文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
       // 传输数据
     },
     // 恢复文件

@@ -14,6 +14,7 @@
           </router-link>
         </div>
       </div>
+
       <div class="header-right">
         <div class="item">
           <!-- 通知框 -->
@@ -30,6 +31,7 @@
             </el-badge>
           </el-popover>
         </div>
+
         <div class="nav-dropdown">
           <!-- 头像下拉菜单 -->
           <el-dropdown>
@@ -55,6 +57,7 @@
         </div>
       </div>
     </el-header>
+
     <!-- 页面主体区域 -->
     <el-main>
       <!-- 面包屑导航 -->
@@ -66,6 +69,7 @@
           <el-breadcrumb-item>个人信息</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+
       <!-- 用户信息 -->
       <el-card class="box-card">
         <!-- 用户头像 -->
@@ -91,7 +95,7 @@
             <span class="el-icon-lock">密码</span>
             <span>•••••••</span>
             <!-- 修改密码 -->
-            <el-button type="text" @click="changeDialogVisible = true"
+            <el-button type="text" @click="changePasswordDialogVisible = true"
               >修改密码</el-button
             >
           </div>
@@ -111,51 +115,54 @@
             <span>{{ userInfo.userId }}</span>
           </div>
         </div>
-        <!-- 修改密码对话框 -->
-        <el-dialog
-          title="修改密码"
-          :visible.sync="changeDialogVisible"
-          width="30%"
-          @close="changeDialogClosed"
-        >
-          <!-- 内容主体区域 -->
-          <el-form
-            :model="passwordDialog"
-            :rules="changePasswordRules"
-            ref="changePasswordRef"
-          >
-            <!-- 当前密码 -->
-            <el-form-item prop="oldPassword">
-              <el-input
-                v-model="passwordDialog.oldPassword"
-                placeholder="当前密码"
-                type="password"
-              ></el-input>
-            </el-form-item>
-            <!-- 新密码 -->
-            <el-form-item prop="newPassword1">
-              <el-input
-                v-model="passwordDialog.newPassword1"
-                placeholder="输入新密码"
-                type="password"
-              ></el-input>
-            </el-form-item>
-            <!-- 二次输入新密码 -->
-            <el-form-item prop="newPassword2">
-              <el-input
-                v-model="passwordDialog.newPassword2"
-                placeholder="确认新密码"
-                type="password"
-              ></el-input>
-            </el-form-item>
-          </el-form>
-          <!-- 底部区域 -->
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="changeDialogVisible = false">取 消</el-button>
-            <el-button @click="changePassword">确 定</el-button>
-          </span>
-        </el-dialog>
       </el-card>
+
+      <!-- 修改密码对话框 -->
+      <el-dialog
+        title="修改密码"
+        :visible.sync="changePasswordDialogVisible"
+        width="30%"
+        @close="changePasswordDialogClosed"
+      >
+        <!-- 内容主体区域 -->
+        <el-form
+          :model="passwordForm"
+          :rules="changePasswordRules"
+          ref="changePasswordRef"
+        >
+          <!-- 当前密码 -->
+          <el-form-item prop="oldPassword">
+            <el-input
+              v-model="passwordForm.oldPassword"
+              placeholder="当前密码"
+              type="password"
+            ></el-input>
+          </el-form-item>
+          <!-- 新密码 -->
+          <el-form-item prop="newPassword1">
+            <el-input
+              v-model="passwordForm.newPassword1"
+              placeholder="输入新密码"
+              type="password"
+            ></el-input>
+          </el-form-item>
+          <!-- 二次输入新密码 -->
+          <el-form-item prop="newPassword2">
+            <el-input
+              v-model="passwordForm.newPassword2"
+              placeholder="确认新密码"
+              type="password"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <!-- 底部区域 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="changePasswordDialogVisible = false"
+            >取 消</el-button
+          >
+          <el-button @click="changePassword">确 定</el-button>
+        </span>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -165,29 +172,43 @@ export default {
   data() {
     // 验证两次密码一致的函数
     var checkPassword2 = (rule, value, callback) => {
-      if (value !== this.passwordDialog.newPassword1) {
+      if (value !== this.passwordForm.newPassword1) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
       }
     }
     return {
+      // 存储数据---------------------------------------------------------------
+      // 旧昵称
+      oldNickname: '',
       // 用户信息
       userInfo: {
         // 用户ID
-        userId: '1222113',
-        nickname: '张三342',
-        userName: 'WE谢谢',
-        email: '111@qq.com'
+        userId: '',
+        nickname: '',
+        userName: '',
+        email: '',
+        password: ''
+        // 头像
       },
-      // 修改密码对话框的可见属性
-      changeDialogVisible: false,
+
+      // 表单--------------------------------------------------------------------
+
       // 修改密码的表单对象
-      passwordDialog: {
+      passwordForm: {
         oldPassword: '',
         newPassword1: '',
         newPassword2: ''
       },
+
+      // 对话框的可见属性--------------------------------------------------------------------
+
+      // 修改密码对话框的可见属性
+      changePasswordDialogVisible: false,
+
+      // 验证规则--------------------------------------------------------------------
+
       // 修改密码的验证规则对象
       changePasswordRules: {
         // 验证旧密码是否合法
@@ -203,65 +224,133 @@ export default {
         // 验证二次新密码是否合法
         newPassword2: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' },
+          {
+            min: 6,
+            max: 16,
+            message: '长度在 6 到 16 个字符',
+            trigger: 'blur'
+          },
           { validator: checkPassword2, trigger: 'blur' }
         ]
       }
     }
   },
-  created() {},
-  mounted() {},
+  created() {
+    // 加载用户信息
+    this.getUserInfo()
+  },
   methods: {
-    // 账号设置
+    // 头部--------------------------------------------------------------
+
+    // 获取头像
+
+    // 前往个人信息页
     gotoProfile() {
       this.$router.push('/profile')
     },
+
     // 前往官网
     gotoWelcome() {
       this.$router.push('/')
     },
-    // 获取帮助
+
+    // 获取帮助!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     getHelp() {
       this.$router.push('/')
     },
-    // 退出登录
+
+    // 退出登录!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     logout() {
       // 清除token
-      // window.sessionStorage.removeItem('token')
+      window.sessionStorage.removeItem('token')
       // 跳转到/
       this.$router.push('/')
     },
-    // 更改用户昵称
-    changeNickname() {
-      // 消息提示
-      this.$message({
-        showClose: true,
-        message: '更改昵称成功',
-        type: 'success'
-      })
+
+    // 主体部分--------------------------------------------------------------
+
+    // 获取用户信息
+    async getUserInfo() {
+      var token = window.sessionStorage.getItem('token')
+      const { data: res } = await this.$http.get('/user/?token=' + token)
+      // 存储的userInfo对象
+      this.userInfo.userId = res.id
+      this.userInfo.nickname = res.nickname
+      this.userInfo.userName = res.username
+      this.userInfo.email = res.email
+      this.oldNickname = res.nickname
+      this.userInfo.password = res.password
     },
-    // 修改密码
+
+    // 修改用户昵称!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    async changeNickname() {
+      // 发送数据（此时用户信息中存储的是本地修改后的用户昵称，查看userInfo
+      var token = window.sessionStorage.getItem('token')
+      console.log(this.oldNickname)
+      var patchform = {
+        nickname: this.userInfo.nickname
+      }
+      const { data: res } = await this.$http.patch(
+        '/user/?token=' + token,
+        patchform
+      )
+      if (res === '修改失败') {
+        this.$message.error(res)
+        this.userInfo.nickname = this.oldNickname
+      } else {
+        this.$message.success('修改昵称成功')
+        this.userInfo.nickname = res.nickname
+      }
+      // 返回是否成功以及用户昵称（改后昵称
+      // 成功则消息提示成功
+      // 失败则消息提示失败，并将用户昵称改为修改前的用户昵称
+      // 消息提示（测试用，写函数时可直接复制到正确位置
+      // 错误消息提示
+      // 成功消息提示
+    },
+
+    // 修改密码!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     changePassword() {
-      this.$refs.changePasswordRef.validate(valid => {
+      this.$refs.changePasswordRef.validate(async valid => {
         // 校验失败
         if (!valid) return
-        // 判断合法
-        // 发送数据并接收返回信息
-        // 修改密码失败弹窗提示(element-ui Message)
-        // 修改密码成功
-        this.changeDialogVisible = false
-        // 修改密码成功提示
-        this.$message({
-          showClose: true,
-          message: '修改密码成功',
-          type: 'success'
-        })
+        if (this.passwordForm.oldPassword !== this.userInfo.password) {
+          this.$message.error('原密码错误')
+          return
+        } else if (
+          this.passwordForm.oldPassword === this.passwordForm.newPassword1
+        ) {
+          this.$message.error('新密码与旧密码一致')
+          return
+        }
+        var token = window.sessionStorage.getItem('token')
+        var patchform = {
+          password: this.passwordForm.newPassword1
+        }
+        const { data: res } = await this.$http.patch(
+          '/user/?token=' + token,
+          patchform
+        )
+        if (res === '修改失败') {
+          this.$message.error(res)
+        } else {
+          this.$message.success('修改密码成功')
+          this.changePasswordDialogVisible = false
+        }
       })
     },
+
+    // 辅助--------------------------------------------------------------
+
     // 监听新建团队空间对话框的关闭事件
-    changeDialogClosed() {
+    changePasswordDialogClosed() {
+      // 重置对话框中输入框内容
       this.$refs.changePasswordRef.resetFields()
     }
+
+    // 待完成--------------------------------------------------------------
+    // 获取通知
+    // 修改头像
   }
 }
 </script>

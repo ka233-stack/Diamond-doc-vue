@@ -92,6 +92,8 @@ export default {
       }
     }
     return {
+      // 表单数据------------------------------------------------------------
+
       // 注册表单的数据绑定对象
       registerForm: {
         username: '',
@@ -99,6 +101,9 @@ export default {
         password1: '',
         password2: ''
       },
+
+      // 验证规则------------------------------------------------------------
+
       // 注册表单的验证规则对象
       registerFormRules: {
         // 验证用户名是否合法
@@ -133,19 +138,39 @@ export default {
   methods: {
     // 注册
     register() {
-      this.$refs.registerFormRef.validate(valid => {
+      this.$refs.registerFormRef.validate(async valid => {
         // 校验失败
         if (!valid) return
-        // 判断合法
+        // 要发送的数据
+        var postForm = {
+          username: this.registerForm.username,
+          password: this.registerForm.password1,
+          email: this.registerForm.email
+        }
+        const { data: res } = await this.$http.post('/register/', postForm)
         // 发送数据并接收返回信息
-        // 注册失败弹窗提示(element-ui Message)
-        // 注册成功跳转
-        this.$router.push('/dashboard')
+        if (res === '用户名已存在' || res === '邮箱已存在') {
+          this.$message.error(res)
+        } else {
+          // token = res;
+          window.sessionStorage.setItem('token', res)
+          this.$message.success('注册成功')
+          this.$router.push('/dashboard')
+        }
       })
     },
+
     // 转到登录
     gotoLogin() {
       this.$router.push('/login')
+    },
+
+    // 检查登录状态
+    checkLogin() {
+      console.log(window.sessionStorage.getItem('token'))
+      if (window.sessionStorage.getItem('token') !== null) {
+        this.$router.push('/dashboard')
+      }
     }
   }
 }
