@@ -29,7 +29,12 @@ import {
   Pagination,
   Breadcrumb,
   BreadcrumbItem,
-  Dialog
+  Dialog,
+  TabPane,
+  Tabs,
+  Tooltip,
+  Scrollbar,
+  Upload
 } from 'element-ui'
 
 Vue.use(Button)
@@ -62,6 +67,11 @@ Vue.use(Pagination)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Dialog)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Tooltip)
+Vue.use(Scrollbar)
+Vue.use(Upload)
 
 // 全局挂载弹窗
 Vue.prototype.$message = Message
