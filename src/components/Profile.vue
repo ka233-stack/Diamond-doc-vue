@@ -1,11 +1,11 @@
 <template>
-  <el-container>
+  <el-container class="container">
     <!-- 头部区域-->
-    <el-header>
+    <el-header class="nav">
       <div class="header-left">
         <div>
           <router-link to="/">
-            <img src="../assets/logo.png" alt="金刚石文档logo" />
+            <img src="../assets/img/logo.png" alt="金刚石文档logo" />
           </router-link>
         </div>
         <div>
@@ -18,16 +18,64 @@
       <div class="header-right">
         <div class="item">
           <!-- 通知框 -->
-          <el-popover placement="bottom" width="200" trigger="hover">
-            <div>
-              <h2>
-                通知
-              </h2>
-              <el-link>默认链接</el-link>
-            </div>
-            <el-badge :value="12" slot="reference">
+          <el-popover
+            placement="bottom"
+            width="260"
+            trigger="hover"
+            title="通知"
+          >
+            <!-- 滚动条 -->
+            <el-scrollbar style="height:360px">
+              <!-- 通知显示部分 -->
+              <div v-for="item in messageList" :key="item.id">
+                <!-- 通知内容 -->
+                <span>{{ item.content }}</span>
+                <!-- 通知时间 -->
+                <div>
+                  <span>{{ item.createtime }}</span>
+
+                  <!-- 确认、拒绝按钮 -->
+                  <div v-if="item.category === 2">
+                    <!-- 确认按钮 -->
+                    <el-button
+                      icon="el-icon-check"
+                      circle
+                      size="mini"
+                      @click="agreeMessage(item)"
+                    ></el-button>
+                    <!-- 拒绝按钮 -->
+                    <el-button
+                      icon="el-icon-close"
+                      circle
+                      size="mini"
+                      @click="refuseMessage(item)"
+                    ></el-button>
+                  </div>
+                  <!-- 已读按钮 -->
+                  <div v-else>
+                    <!-- 确认按钮 -->
+                    <el-button
+                      icon="el-icon-check"
+                      circle
+                      size="mini"
+                      @click="readMessage(item)"
+                    ></el-button>
+                  </div>
+                </div>
+              </div>
+            </el-scrollbar>
+            <el-badge
+              :value="messageInfo.messageNum"
+              :max="99"
+              :hidden="messageInfo.isHidden"
+              slot="reference"
+            >
               <!-- 通知图标 -->
-              <el-button icon="el-icon-bell" circle></el-button>
+              <el-button
+                icon="el-icon-bell"
+                circle
+                @click="getMessage"
+              ></el-button>
             </el-badge>
           </el-popover>
         </div>
@@ -37,7 +85,7 @@
           <el-dropdown>
             <!-- 头像 -->
             <el-button class="nav-avatar" circle>
-              <img src="../assets/avatar2.png" alt="用户头像" />
+              <img src="../assets/img/avatar.png" alt="用户头像" />
             </el-button>
             <el-dropdown-menu class="dropdown-menu" slot="dropdown">
               <el-dropdown-item @click.native="gotoProfile">
@@ -57,7 +105,6 @@
         </div>
       </div>
     </el-header>
-
     <!-- 页面主体区域 -->
     <el-main>
       <!-- 面包屑导航 -->
@@ -71,19 +118,22 @@
       </div>
 
       <!-- 用户信息 -->
-      <el-card class="box-card">
+      <div class="box-card">
         <!-- 用户头像 -->
-        <div>
+        <div class="avatar">
           <!-- 头像 -->
-          <el-button class="nav-avatar" circle>
-            <img src="../assets/avatar2.png" alt="用户头像" />
+          <el-button>
+            <img src="../assets/img/avatar2.png" alt="用户头像" />
           </el-button>
         </div>
+        <!-- 分割线 -->
+        <div class="divide"></div>
         <!-- 信息显示区 -->
-        <div>
+        <div class="info">
           <!-- 昵称 -->
-          <div>
-            <span class="el-icon-user">昵称</span>
+          <div class="nickname">
+            <i class="el-icon-user"></i>
+            <span>昵称</span>
             <el-input
               v-model="userInfo.nickname"
               placeholder="用户昵称"
@@ -91,8 +141,9 @@
             ></el-input>
           </div>
           <!-- 密码 -->
-          <div>
-            <span class="el-icon-lock">密码</span>
+          <div class="passwd">
+            <i class="el-icon-lock"></i>
+            <span>密码</span>
             <span>•••••••</span>
             <!-- 修改密码 -->
             <el-button type="text" @click="changePasswordDialogVisible = true"
@@ -100,22 +151,25 @@
             >
           </div>
           <!-- 邮箱 -->
-          <div>
-            <span class="el-icon-message">邮箱</span>
+          <div class="emailbox">
+            <i class="el-icon-message"></i>
+            <span>邮箱</span>
             <span>{{ userInfo.email }}</span>
           </div>
           <!-- 用户名 -->
-          <div>
-            <span class="el-icon-bank-card">用户名</span>
+          <div class="username">
+            <i class="el-icon-bank-card"></i>
+            <span>用户名</span>
             <span>{{ userInfo.userName }}</span>
           </div>
           <!-- 用户id -->
-          <div>
-            <span class="el-icon-postcard">账号ID</span>
+          <div class="username">
+            <i class="el-icon-postcard"></i>
+            <span>账号ID</span>
             <span>{{ userInfo.userId }}</span>
           </div>
         </div>
-      </el-card>
+      </div>
 
       <!-- 修改密码对话框 -->
       <el-dialog
@@ -123,6 +177,7 @@
         :visible.sync="changePasswordDialogVisible"
         width="30%"
         @close="changePasswordDialogClosed"
+        center
       >
         <!-- 内容主体区域 -->
         <el-form
@@ -158,15 +213,14 @@
         <!-- 底部区域 -->
         <span slot="footer" class="dialog-footer">
           <el-button @click="changePasswordDialogVisible = false"
-            >取 消</el-button
+            >取消</el-button
           >
-          <el-button @click="changePassword">确 定</el-button>
+          <el-button @click="changePassword">确定</el-button>
         </span>
       </el-dialog>
     </el-main>
   </el-container>
 </template>
-
 <script>
 export default {
   data() {
@@ -180,18 +234,26 @@ export default {
     }
     return {
       // 存储数据---------------------------------------------------------------
-      // 旧昵称
-      oldNickname: '',
+
       // 用户信息
       userInfo: {
         // 用户ID
-        userId: '',
-        nickname: '',
-        userName: '',
-        email: '',
+        userId: '1222113',
+        nickname: '张三342',
+        userName: 'WE谢谢',
+        email: '111@qq.com',
         password: ''
         // 头像
       },
+
+      // 通知信息数字框
+      messageInfo: {
+        messageNum: '',
+        isHidden: false
+      },
+
+      // 通知信息列表
+      messageList: [],
 
       // 表单--------------------------------------------------------------------
 
@@ -236,11 +298,82 @@ export default {
     }
   },
   created() {
+    this.getMessage()
     // 加载用户信息
     this.getUserInfo()
   },
   methods: {
     // 头部--------------------------------------------------------------
+
+    // 未读消息变已读
+    async readMessage(message) {
+      var token = window.sessionStorage.getItem('token')
+      var id = message.id
+      var patchform = {
+        status: 0
+      }
+      const { data: res } = await this.$http.patch(
+        '/message/' + id + '/?token=' + token,
+        patchform
+      )
+      console.log(res)
+      if (res === '成功') {
+        this.$message.success('消息已读')
+        this.getMessage()
+      } else {
+        this.$message.error(res)
+      }
+    },
+
+    // 同意通知
+    async agreeMessage(message) {
+      var group = message.group
+      var token = window.sessionStorage.getItem('token')
+      var putform = {
+        user_id: message.senduser,
+        decision: true
+      }
+      const { data: res } = await this.$http.put(
+        '/group/' + group + '/?token=' + token,
+        putform
+      )
+      if (res === '成功') {
+        this.$message.success('该用户已加入您的团队')
+        this.readMessage(message)
+      } else {
+        this.$message.err('加入失败')
+      }
+    },
+
+    // 拒绝通知
+    async refuseMessage(message) {
+      var group = message.group
+      var token = window.sessionStorage.getItem('token')
+      var putform = {
+        user_id: message.senduser,
+        decision: false
+      }
+      const { data: res } = await this.$http.put(
+        '/group/' + group + '/?token=' + token,
+        putform
+      )
+      if (res === '成功') {
+        this.$message.success('已拒绝此申请')
+        this.readMessage(message)
+      } else {
+        this.$message.err(res)
+      }
+    },
+
+    // 获取通知!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    async getMessage() {
+      this.messageList = []
+      this.messageInfo.messageNum = ''
+      var token = window.sessionStorage.getItem('token')
+      const { data: res } = await this.$http.get('/message/?token=' + token)
+      this.messageInfo.messageNum = res[0].count
+      this.messageList = res
+    },
 
     // 获取头像
 
@@ -269,7 +402,7 @@ export default {
 
     // 主体部分--------------------------------------------------------------
 
-    // 获取用户信息
+    // 获取用户信息!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     async getUserInfo() {
       var token = window.sessionStorage.getItem('token')
       const { data: res } = await this.$http.get('/user/?token=' + token)
@@ -310,7 +443,7 @@ export default {
     },
 
     // 修改密码!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    changePassword() {
+    async changePassword() {
       this.$refs.changePasswordRef.validate(async valid => {
         // 校验失败
         if (!valid) return
@@ -354,5 +487,199 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.container {
+  width: 100%;
+  height: 100%;
+  background-color: whitesmoke;
+}
+.el-header {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav {
+  height: 50px !important;
+  background-color: white;
+}
+.header-left {
+  width: 250px;
+  height: 50px;
+  display: flex;
+  justify-items: flex-start;
+  align-items: center;
+}
+.header-left img {
+  width: 40px;
+  height: 40px;
+  margin-left: 20px;
+}
+.header-left span {
+  width: 100px;
+  height: 40px;
+  margin-left: 10px;
+  display: inline-block;
+  text-align: center;
+  line-height: 40px;
+  font-size: 18px;
+}
+.header-left .router-link-active {
+  color: rgb(85, 85, 85);
+  text-decoration: none;
+}
+.header-right {
+  width: 400px;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 
-<style></style>
+.item {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.item .el-button {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(124, 124, 124);
+  border: solid 1px rgb(124, 124, 124);
+}
+.item .el-button:hover {
+  background-color: whitesmoke;
+}
+.nav-dropdown {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav-avatar {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+.nav-avatar img {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  border: solid 1px rgb(124, 124, 124);
+}
+.dropdown-menu {
+  margin: 0;
+  padding-top: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.box-card {
+  width: 900px;
+  height: 600px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+.avatar {
+  width: 250px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.avatar button {
+  width: 80px;
+  height: 80px;
+  margin: 0;
+  padding: 0;
+  border-radius: 100%;
+  border: none;
+}
+.avatar img {
+  width: 80px;
+  height: 80px;
+  margin: 0;
+  padding: 0;
+  border-radius: 100%;
+}
+.info {
+  width: 600px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.info div {
+  width: 450px;
+  height: 40px;
+  margin: 10px 0px;
+  margin-left: 30px;
+  font-size: 14px;
+  line-height: 40px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.info i {
+  margin-right: 10px;
+}
+.info span {
+  width: 100px;
+}
+/deep/ .info .nickname .el-input__inner {
+  width: 200px;
+  height: 40px;
+  margin: 0;
+  color: rgb(85, 85, 85);
+  font-size: 14px;
+  border: none;
+  border-radius: 1px;
+  box-shadow: inset 0 0 6px rgb(224, 224, 224);
+  transition: 0.1s linear;
+  -webkit-transition: 0.1s linear;
+}
+/deep/ .info .nickname .el-input__inner:focus {
+  box-shadow: inset 0 0 9px rgb(192, 192, 192);
+}
+.info .passwd .el-button {
+  margin-left: 45px;
+}
+.divide {
+  width: 1px;
+  height: 400px;
+  margin-right: 70px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 10%,
+    rgb(85, 85, 85) 20%,
+    rgb(85, 85, 85) 80%,
+    rgba(0, 0, 0, 0) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+</style>

@@ -181,7 +181,7 @@ export default {
   height: 100%;
   margin: 0;
   position: absolute;
-  background: url(../assets/lr_backsrc.jpg) no-repeat;
+  background: url(../assets/img/lr_backsrc.jpg) no-repeat;
   background-size: 100% 100%;
   background-attachment: fixed;
 }

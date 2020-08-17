@@ -5,7 +5,7 @@
       <div class="header-left">
         <div>
           <router-link to="/">
-            <img src="../assets/logo.png" alt="金刚石文档logo" />
+            <img src="../assets/img/logo.png" alt="金刚石文档logo" />
           </router-link>
         </div>
         <div>
@@ -18,44 +18,52 @@
       <div class="header-right">
         <div class="item">
           <!-- 通知框 -->
-          <el-popover placement="bottom" width="200" trigger="click">
-            <!-- 通知框 -->
-            <div>
-              <!-- 标题 -->
-              <h3>通知</h3>
-
-              <!-- 通知 -->
-              <div v-for="item in messageList" :key="item.messageId">
+          <el-popover
+            placement="bottom"
+            width="260"
+            trigger="hover"
+            title="通知"
+          >
+            <!-- 滚动条 -->
+            <el-scrollbar style="height:360px">
+              <!-- 通知显示部分 -->
+              <div v-for="item in messageList" :key="item.id">
                 <!-- 通知内容 -->
-                <div>
-                  <span>
-                    {{ item.content }}
-                  </span>
-                </div>
+                <span>{{ item.content }}</span>
                 <!-- 通知时间 -->
                 <div>
-                  <span>
-                    {{ item.time }}
-                  </span>
-                </div>
-                <!-- 按钮组 -->
-                <div v-if="item.isConfirm">
-                  <el-button
-                    type="success"
-                    icon="el-icon-check"
-                    size="mini"
-                    circle
-                  ></el-button>
-                  <el-button
-                    type="danger"
-                    icon="el-icon-close"
-                    size="mini"
-                    circle
-                  ></el-button>
+                  <span>{{ item.createtime }}</span>
+
+                  <!-- 确认、拒绝按钮 -->
+                  <div v-if="item.category === 2">
+                    <!-- 确认按钮 -->
+                    <el-button
+                      icon="el-icon-check"
+                      circle
+                      size="mini"
+                      @click="agreeMessage(item)"
+                    ></el-button>
+                    <!-- 拒绝按钮 -->
+                    <el-button
+                      icon="el-icon-close"
+                      circle
+                      size="mini"
+                      @click="refuseMessage(item)"
+                    ></el-button>
+                  </div>
+                  <!-- 已读按钮 -->
+                  <div v-else>
+                    <!-- 确认按钮 -->
+                    <el-button
+                      icon="el-icon-check"
+                      circle
+                      size="mini"
+                      @click="readMessage(item)"
+                    ></el-button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- 通知数字标记 -->
+            </el-scrollbar>
             <el-badge
               :value="messageInfo.messageNum"
               :max="99"
@@ -66,7 +74,7 @@
               <el-button
                 icon="el-icon-bell"
                 circle
-                @click="showMessage"
+                @click="getMessage"
               ></el-button>
             </el-badge>
           </el-popover>
@@ -77,7 +85,7 @@
           <el-dropdown>
             <!-- 头像 -->
             <el-button class="nav-avatar" circle>
-              <img src="../assets/avatar.png" alt="用户头像" />
+              <img src="../assets/img/avatar.png" alt="用户头像" />
             </el-button>
             <el-dropdown-menu class="dropdown-menu" slot="dropdown">
               <el-dropdown-item @click.native="gotoProfile">
@@ -140,7 +148,7 @@
               <el-menu-item
                 v-for="team in teamList"
                 :key="team.id"
-                :index="'/space/' + team.id"
+                :index="'/space/' + team.teamId"
               >
                 <!-- 文本 -->
                 <span>{{ team.teamName }}</span>
@@ -210,8 +218,8 @@
                 ref="joinSpaceRef"
                 label-width="100px"
               >
-                <el-form-item label="空间ID" prop="spaceId">
-                  <el-input v-model.number="joinSpaceForm.spaceId"></el-input>
+                <el-form-item label="空间名称" prop="spaceName">
+                  <el-input v-model="joinSpaceForm.spaceName"></el-input>
                 </el-form-item>
               </el-form>
 
@@ -251,70 +259,33 @@ export default {
       // 存储数据------------------------------------------------------------
 
       // 团队空间列表
-      teamList: [
-        {
-          id: 1,
-          teamName: '团队空间1'
-        },
-        {
-          id: 2,
-          teamName: '团队空间2'
-        },
-        {
-          id: 6,
-          teamName: '团队空间3'
-        }
-      ],
+      teamList: [],
 
-      // 通知信息
+      // 通知信息数字框
       messageInfo: {
-        messageNum: 13,
+        messageNum: '',
         isHidden: false
       },
 
-      // 通知列表
+      // 通知信息列表
       messageList: [
-        {
-          messageId: 1,
-          isConfirm: false,
-          content: '发顺丰士大夫反对',
-          time: '2020-08-10 12:11:11'
-        },
-        {
-          messageId: 3,
-          isConfirm: true,
-          content: '发顺丰士大夫反对1',
-          time: '2020-08-10 12:11:11'
-        },
-        {
-          messageId: 2,
-          isConfirm: false,
-          content: '发顺丰士大夫反对2',
-          time: '2020-08-10 12:11:11'
-        }
       ],
-
-      // 表单--------------------------------------------------------------------
 
       // 加入团队空间的表单对象
       joinSpaceForm: {
         // 空间ID
-        spaceId: null
+        spaceName: ''
       },
-
       // 新建团队空间的表单对象
       createSpaceForm: {
         // 空间ID
         spaceName: ''
       },
 
-      // 对话框的可见属性----------------------------------------------------------------
+      // 辅助----------------------------------------------------------------
 
       // 控制添加空间框的显示
       addSpaceDialogVisible: false,
-
-      // 验证规则----------------------------------------------------------------
-
       // 新建团队空间的验证规则对象
       createSpaceRules: {
         spaceName: [
@@ -323,9 +294,8 @@ export default {
       },
       // 加入团队空间的验证规则对象
       joinSpaceRules: {
-        spaceId: [
-          { required: true, message: 'ID不能为空', trigger: 'blur' },
-          { type: 'number', message: '请输入数字ID', trigger: 'blur' }
+        spaceName: [
+          { required: true, message: '名称不能为空', trigger: 'blur' }
         ]
       }
       // 待完成--------------------------------------------------------------
@@ -339,18 +309,70 @@ export default {
   created() {
     // 获取头像
     // 获取通知
+    this.getTeamList()
     this.getMessage()
   },
   methods: {
     // 头部导航栏---------------------------------------------------------------
 
-    // 获取通知
-    getMessage() {},
+    // 未读消息变已读
+    async readMessage(message) {
+      var token = window.sessionStorage.getItem('token')
+      var id = message.id
+      var patchform = {
+        status: 0
+      }
+      const { data: res } = await this.$http.patch('/message/' + id + '/?token=' + token, patchform)
+      if (res === '成功') {
+        this.$message.success('消息已读')
+        this.getMessage()
+      } else {
+        this.$message.error(res)
+      }
+    },
 
-    // 显示通知
-    showMessage() {
-      // 隐藏通知数字标记
-      this.messageInfo.isHidden = true
+    // 同意通知
+    async agreeMessage(message) {
+      var group = message.group
+      var token = window.sessionStorage.getItem('token')
+      var putform = {
+        user_id: message.senduser,
+        decision: true
+      }
+      const { data: res } = await this.$http.put('/group/' + group + '/?token=' + token, putform)
+      if (res === '成功') {
+        this.$message.success('该用户已加入您的团队')
+        this.readMessage(message)
+      } else {
+        this.$message.err(res)
+      }
+    },
+
+    // 拒绝通知
+    async refuseMessage(message) {
+      var group = message.group
+      var token = window.sessionStorage.getItem('token')
+      var putform = {
+        user_id: message.senduser,
+        decision: false
+      }
+      const { data: res } = await this.$http.put('/group/' + group + '/?token=' + token, putform)
+      if (res === '成功') {
+        this.$message.success('已拒绝此申请')
+        this.readMessage(message)
+      } else {
+        this.$message.err(res)
+      }
+    },
+
+    // 获取通知!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    async getMessage() {
+      this.messageList = []
+      this.messageInfo.messageNum = ''
+      var token = window.sessionStorage.getItem('token')
+      const { data: res } = await this.$http.get('/message/?token=' + token)
+      this.messageInfo.messageNum = res[0].count
+      this.messageList = res
     },
 
     // 前往个人信息
@@ -368,7 +390,7 @@ export default {
     // 退出登录!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     logout() {
       // 清除token
-      // window.sessionStorage.removeItem('token')
+      window.sessionStorage.removeItem('token')
       // 跳转到/
       this.$router.push('/')
     },
@@ -378,11 +400,21 @@ export default {
     // 获取团队列表!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     async getTeamList() {
       // get请求
+      this.teamList = []
+      var token = window.sessionStorage.getItem('token')
+      const { data: res } = await this.$http.get('/group/user/?token=' + token)
+      var num = res.length
+      for (var i = 0; i < num; i++) {
+        var plus = {
+          teamId: res[i].id,
+          teamName: res[i].name
+        }
+        this.teamList.push(plus)
+      }
     },
-
     // 新建团队空间!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     createTeamSpace() {
-      this.$refs.createSpaceRef.validate(valid => {
+      this.$refs.createSpaceRef.validate(async valid => {
         // 校验失败
         if (!valid) return
         // 发起添加团队空间的网络请求
@@ -390,17 +422,28 @@ export default {
         // 创建失败if
         // 创建成功
         // 隐藏对话框
-        this.addSpaceDialogVisible = false
+        var token = window.sessionStorage.getItem('token')
+        var postform = {
+          name: this.createSpaceForm.spaceName
+        }
+        const { data: res } = await this.$http.post(
+          '/group/?token=' + token,
+          postform
+        )
+        if (res === '小组名重复') {
+          this.$message.error(res)
+        } else {
+          this.$message.success('创建团队空间成功')
+          this.addSpaceDialogVisible = false
+        }
         // 创建成功提示
-        this.$message.success('创建团队空间成功')
         // 重新获取团队空间列表
         this.getTeamList()
       })
     },
-
     // 加入团队空间!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     joinTeamSpace() {
-      this.$refs.joinSpaceRef.validate(valid => {
+      this.$refs.joinSpaceRef.validate(async valid => {
         // 校验失败
         if (!valid) return
         // 发起添加团队空间的网络请求
@@ -408,22 +451,60 @@ export default {
         // 添加失败if
         // 添加成功
         // 隐藏对话框
-        this.addSpaceDialogVisible = false
+        var token = window.sessionStorage.getItem('token')
+        var postform = {
+          category: '2',
+          name: this.joinSpaceForm.spaceName
+        }
+        const { data: res } = await this.$http.post(
+          '/message/?token=' + token,
+          postform
+        )
+        if (res === '成功') {
+          this.addSpaceDialogVisible = false
+          this.$message.success('已发出申请')
+        } else if (res === null) {
+          this.$message.error('该小组不存在')
+        } else {
+          this.$message.error(res)
+        }
         // 创建成功提示
-        this.$message.success('创建团队空间成功')
         // 重新获取团队空间列表
         this.getTeamList()
       })
     },
 
     // 右侧---------------------------------------------------------------
-
     // 新建文档!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    createNewDoc() {
+    async createNewDoc() {
       // 发送请求
+      var website = window.location.hash
+      var au = 2
+      if (
+        website === '#/dashboard' ||
+        website === '#/desktop' ||
+        website === '#trash'
+      ) {
+        au = 0
+      }
+      var token = window.sessionStorage.getItem('token')
+      var postform = {
+        title: '无标题',
+        auth: au
+      }
+      // 团队默认权限2：他人可读+评论； 个人默认权限0：私密文档
+      const { data: res } = await this.$http.post(
+        '/doc/?token=' + token,
+        postform
+      )
+      if (res === '请先登录') {
+        this.$message.error(res)
+      } else {
+        var doc = res.id
+        this.$router.push('/doc/' + doc)
+      }
       // 获取新文档id
       // 跳转至文档页
-      this.$router.push('/doc/1')
     },
 
     // 辅助---------------------------------------------------------------
@@ -492,34 +573,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
-.search {
-  width: 200px;
-  height: 50px;
-  margin: 0;
-  padding: 0;
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-}
-/deep/ .search .el-input__inner {
-  width: 200px;
-  height: 30px;
-  color: rgb(85, 85, 85);
-  font-size: 15px;
-  border: none;
-  border-radius: 30px;
-  box-shadow: inset 0 0 3px rgb(124, 124, 124);
-  transition: 0.1s linear;
-  -webkit-transition: 0.1s linear;
-}
-/deep/ .el-input__inner:hover {
-  box-shadow: inset 0 0 6px rgb(189, 189, 189);
-  transition: 0.2s linear;
-  -webkit-transition: 0.2s linear;
-}
-/deep/ .el-input__inner:focus {
-  box-shadow: inset 0 0 10px rgb(165, 165, 165);
-}
+
 .item {
   width: 50px;
   height: 50px;

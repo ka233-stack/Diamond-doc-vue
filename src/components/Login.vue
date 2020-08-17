@@ -56,16 +56,11 @@
 export default {
   data() {
     return {
-      // 表单数据-------------------------------------------------------------------
-
       // 登录表单的数据绑定对象
       loginForm: {
         username: '',
         password: ''
       },
-
-      // 验证规则-------------------------------------------------------------------
-
       // 登录表单的验证规则对象
       loginFormRules: {
         // 验证用户名是否合法
@@ -82,7 +77,6 @@ export default {
     }
   },
   created() {
-    // 检查登录状态
     this.checkLogin()
   },
   methods: {
@@ -105,15 +99,12 @@ export default {
         }
       })
     },
-
     // 转到注册
     gotoRegister() {
       this.$router.push('/register')
     },
-
     // 检查登录状态
     checkLogin() {
-      console.log(window.sessionStorage.getItem('token'))
       if (window.sessionStorage.getItem('token') !== null) {
         this.$router.push('/dashboard')
       }
@@ -127,7 +118,7 @@ export default {
   height: 100%;
   margin: 0;
   position: absolute;
-  background: url(../assets/lr_backsrc.jpg) no-repeat;
+  background: url(../assets/img/lr_backsrc.jpg) no-repeat;
   background-size: 100% 100%;
   background-attachment: fixed;
 }
