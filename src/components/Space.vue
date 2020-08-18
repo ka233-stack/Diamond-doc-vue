@@ -258,7 +258,6 @@
       title="分享文档链接"
       :visible.sync="shareDocDialogVisible"
       width="40%"
-      @close="shareDocDialogClosed"
     >
       <!-- 输入框区域 -->
       <el-input v-model="shareDocForm.url" placeholder="文档链接"></el-input>
@@ -682,13 +681,6 @@ export default {
     },
 
     // 监听------------------------------------------------------------
-
-    // 监听分享文档对话框的关闭事件
-    shareDocDialogClosed() {
-      this.shareDocDialogVisible = false
-      // 重置对话框中输入框内容
-      this.$refs.shareDocFormRef.resetFields()
-    },
 
     // 监听pageSize的改变!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     handleSizeChange(newSize) {

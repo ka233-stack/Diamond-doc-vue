@@ -122,9 +122,25 @@
         <!-- 用户头像 -->
         <div class="avatar">
           <!-- 头像 -->
-          <el-button>
-            <img src="../assets/img/avatar2.png" alt="用户头像" />
-          </el-button>
+          <el-upload
+            v-if="isSelf"
+            action=""
+            accept="image/jpg, image/jpeg, image/png, image/gif"
+            :http-request="upload"
+            :before-upload="beforeUploadImg"
+            :on-success="uploadSuccess"
+            :on-error="uploadError"
+            :show-file-list="false"
+          >
+            <img :src="userInfo.url" alt="用户头像" />
+          </el-upload>
+          <div v-if="isSelf">
+            <span>点击修改头像</span>
+            <span>支持JPG、PNG、GIF格式的图片，大小不得超过5M</span>
+          </div>
+          <div>
+            <img :src="othersInfo.url" alt="用户头像" />
+          </div>
         </div>
         <!-- 分割线 -->
         <div class="divide"></div>
@@ -135,10 +151,12 @@
             <i class="el-icon-user"></i>
             <span>昵称</span>
             <el-input
+              v-if="isSelf"
               v-model="userInfo.nickname"
               placeholder="用户昵称"
               @change="changeNickname"
             ></el-input>
+            <span v-else>{{ othersInfo.nickname }}</span>
           </div>
           <!-- 密码 -->
           <div class="passwd">
@@ -146,7 +164,10 @@
             <span>密码</span>
             <span>•••••••</span>
             <!-- 修改密码 -->
-            <el-button type="text" @click="changePasswordDialogVisible = true"
+            <el-button
+              v-if="isSelf"
+              type="text"
+              @click="changePasswordDialogVisible = true"
               >修改密码</el-button
             >
           </div>
@@ -235,6 +256,9 @@ export default {
     return {
       // 存储数据---------------------------------------------------------------
 
+      // 是否是自己
+      isSelf: false,
+
       // 用户信息
       userInfo: {
         // 用户ID
@@ -242,8 +266,19 @@ export default {
         nickname: '张三342',
         userName: 'WE谢谢',
         email: '111@qq.com',
-        password: ''
-        // 头像
+        password: '',
+        url: ''
+      },
+
+      // 用户信息
+      othersInfo: {
+        // 用户ID
+        userId: '1222113',
+        nickname: '张三342',
+        userName: 'WE谢谢',
+        email: '111@qq.com',
+        password: '',
+        url: ''
       },
 
       // 通知信息数字框
@@ -414,6 +449,41 @@ export default {
       this.oldNickname = res.nickname
       this.userInfo.password = res.password
     },
+
+    // 上传图片前
+    beforeUploadImg(res, file) {
+      const isJPG =
+        file.type === 'image/jpg' ||
+        file.type === 'image/png' ||
+        file.type === 'image/jpeg' ||
+        file.type === 'image/gif'
+      const isLt5M = file.size / 1024 / 1024 < 5
+      if (!isJPG) {
+        this.$message.error('支持JPG、PNG格式的图片，大小不得超过5M')
+      }
+      if (!isLt5M) {
+        this.$message.error('文件最大不得超过5M')
+      }
+      return isJPG && isLt5M
+    },
+
+    // 上传图片成功
+    uploadSuccess(res, file) {
+      // 插入图片url？
+      var quill = this.$refs.QuillEditor.quill
+      var length = quill.getSelection().index
+      // insertEmbed：插入内容
+      quill.insertEmbed(length, 'image', res.url)
+      quill.setSelection(length + 1)
+    },
+
+    // 上传图片失败
+    uploadError(res, file) {
+      this.$message.error('图片插入失败')
+    },
+
+    // 上传图片处理过程
+    upload(req) {},
 
     // 修改用户昵称!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     async changeNickname() {

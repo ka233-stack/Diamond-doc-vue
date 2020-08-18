@@ -268,8 +268,7 @@ export default {
       },
 
       // 通知信息列表
-      messageList: [
-      ],
+      messageList: [],
 
       // 加入团队空间的表单对象
       joinSpaceForm: {
@@ -322,7 +321,10 @@ export default {
       var patchform = {
         status: 0
       }
-      const { data: res } = await this.$http.patch('/message/' + id + '/?token=' + token, patchform)
+      const { data: res } = await this.$http.patch(
+        '/message/' + id + '/?token=' + token,
+        patchform
+      )
       if (res === '成功') {
         this.$message.success('消息已读')
         this.getMessage()
@@ -339,7 +341,10 @@ export default {
         user_id: message.senduser,
         decision: true
       }
-      const { data: res } = await this.$http.put('/group/' + group + '/?token=' + token, putform)
+      const { data: res } = await this.$http.put(
+        '/group/' + group + '/?token=' + token,
+        putform
+      )
       if (res === '成功') {
         this.$message.success('该用户已加入您的团队')
         this.readMessage(message)
@@ -356,7 +361,10 @@ export default {
         user_id: message.senduser,
         decision: false
       }
-      const { data: res } = await this.$http.put('/group/' + group + '/?token=' + token, putform)
+      const { data: res } = await this.$http.put(
+        '/group/' + group + '/?token=' + token,
+        putform
+      )
       if (res === '成功') {
         this.$message.success('已拒绝此申请')
         this.readMessage(message)
@@ -475,6 +483,7 @@ export default {
     },
 
     // 右侧---------------------------------------------------------------
+
     // 新建文档!!!!!!!!!!!!!!!!!!!!!!!未完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     async createNewDoc() {
       // 发送请求
