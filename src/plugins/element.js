@@ -34,7 +34,9 @@ import {
   Tabs,
   Tooltip,
   Scrollbar,
-  Upload
+  Upload,
+  Select,
+  Option
 } from 'element-ui'
 
 Vue.use(Button)
@@ -72,6 +74,8 @@ Vue.use(TabPane)
 Vue.use(Tooltip)
 Vue.use(Scrollbar)
 Vue.use(Upload)
+Vue.use(Select)
+Vue.use(Option)
 
 // 全局挂载弹窗
 Vue.prototype.$message = Message

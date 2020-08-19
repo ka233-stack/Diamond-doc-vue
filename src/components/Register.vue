@@ -1,74 +1,88 @@
 <template>
-  <div class="register_container">
-    <!-- 注册组件 -->
-    <div class="register_box">
-      <!-- 标题区域 -->
-      <div class="registerTitle">
-        <h2>注册</h2>
+  <el-container>
+    <img class="background" src="../assets/img/rg_backsrc.png" alt="background" />
+    <!-- 头部区域-->
+    <el-header>
+      <div class="welcomebtn" @click="gotoWelcome">
+        <div id="bars"></div>
+        <div id="bars"></div>
+        <div id="bars"></div>
       </div>
-      <!-- 注册表单区域 -->
-      <div class="registerForm">
-        <el-form
-          ref="registerFormRef"
-          :model="registerForm"
-          :rules="registerFormRules"
-          label-width="0px"
-          class="register_form"
-        >
-          <!-- 用户名 -->
-          <el-form-item prop="username">
-            <el-input
-              v-model="registerForm.username"
-              prefix-icon="el-icon-user"
-              placeholder="用户名"
-            ></el-input>
-          </el-form-item>
-          <!-- 邮箱 -->
-          <el-form-item prop="email">
-            <el-input
-              v-model="registerForm.email"
-              prefix-icon="el-icon-message"
-              type="email"
-              placeholder="邮箱"
-            ></el-input>
-          </el-form-item>
-          <!-- 密码 -->
-          <el-form-item prop="password1">
-            <el-input
-              v-model="registerForm.password1"
-              prefix-icon="el-icon-lock"
-              type="password"
-              placeholder="密码"
-            ></el-input>
-          </el-form-item>
-          <!-- 确认密码 -->
-          <el-form-item prop="password2">
-            <el-input
-              v-model="registerForm.password2"
-              prefix-icon="el-icon-lock"
-              type="password"
-              placeholder="确认密码"
-            ></el-input>
-          </el-form-item>
-          <!-- 按钮区域 -->
-          <el-form-item>
-            <!-- 登录按钮 -->
-            <el-button class="register_btn" @click="register">注册</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <!-- 提示 -->
-      <div class="loginPropt">
-        <div>已有帐号？</div>
-        <!-- 转到登录按钮 -->
-        <div>
-          <el-button class="login_btn" type="primary" @click="gotoLogin"
-            >立即登录</el-button
+      <div id="triangle"></div>
+    </el-header>
+    <el-main>
+      <!-- 注册组件 -->
+      <div class="register_box">
+        <!-- 标题区域 -->
+        <div class="registerTitle">
+          <div id="block_outer"></div>
+          <div id="block_inner"></div>
+          <h2>注册</h2>
+          <div id="block_outer"></div>
+          <div id="block_inner"></div>
+        </div>
+        <!-- 注册表单区域 -->
+        <div class="registerForm">
+          <el-form
+            ref="registerFormRef"
+            :model="registerForm"
+            :rules="registerFormRules"
+            label-width="0px"
+            class="register_form"
           >
+            <!-- 用户名 -->
+            <el-form-item prop="username">
+              <el-input
+                v-model="registerForm.username"
+                prefix-icon="el-icon-user"
+                placeholder="用户名"
+              ></el-input>
+            </el-form-item>
+            <!-- 邮箱 -->
+            <el-form-item prop="email">
+              <el-input
+                v-model="registerForm.email"
+                prefix-icon="el-icon-message"
+                type="email"
+                placeholder="邮箱"
+              ></el-input>
+            </el-form-item>
+            <!-- 密码 -->
+            <el-form-item prop="password1">
+              <el-input
+                v-model="registerForm.password1"
+                prefix-icon="el-icon-lock"
+                type="password"
+                placeholder="密码"
+              ></el-input>
+            </el-form-item>
+            <!-- 确认密码 -->
+            <el-form-item prop="password2">
+              <el-input
+                v-model="registerForm.password2"
+                prefix-icon="el-icon-lock"
+                type="password"
+                placeholder="确认密码"
+              ></el-input>
+            </el-form-item>
+            <!-- 按钮区域 -->
+            <el-form-item>
+              <!-- 登录按钮 -->
+              <el-button class="register_btn" @click="register">注册</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+        <!-- 提示 -->
+        <div class="loginPropt">
+          <div>已有帐号？</div>
+          <!-- 转到登录按钮 -->
+          <div>
+            <el-button class="login_btn" type="primary" @click="gotoLogin">立即登录</el-button>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </el-main>
+  </el-container>
 </template>
 <script>
 export default {
@@ -93,7 +107,6 @@ export default {
     }
     return {
       // 表单数据------------------------------------------------------------
-
       // 注册表单的数据绑定对象
       registerForm: {
         username: '',
@@ -101,9 +114,7 @@ export default {
         password1: '',
         password2: ''
       },
-
       // 验证规则------------------------------------------------------------
-
       // 注册表单的验证规则对象
       registerFormRules: {
         // 验证用户名是否合法
@@ -145,7 +156,8 @@ export default {
         var postForm = {
           username: this.registerForm.username,
           password: this.registerForm.password1,
-          email: this.registerForm.email
+          email: this.registerForm.email,
+          image: 'image/avatar.png'
         }
         const { data: res } = await this.$http.post('/register/', postForm)
         // 发送数据并接收返回信息
@@ -159,44 +171,95 @@ export default {
         }
       })
     },
-
+    // 转到首页
+    gotoWelcome() {
+      this.$router.push('/')
+    },
     // 转到登录
     gotoLogin() {
       this.$router.push('/login')
-    },
-
+    }
     // 检查登录状态
+    /*
     checkLogin() {
       console.log(window.sessionStorage.getItem('token'))
       if (window.sessionStorage.getItem('token') !== null) {
         this.$router.push('/dashboard')
       }
     }
+    */
   }
 }
 </script>
 <style lang="less" scoped>
-.register_container {
-  width: 100%;
-  height: 100%;
+.el-container {
+  width: 1918px;
+  height: 937px;
   margin: 0;
+  padding: 0;
   position: absolute;
-  background: url(../assets/img/lr_backsrc.jpg) no-repeat;
-  background-size: 100% 100%;
-  background-attachment: fixed;
+  overflow: hidden;
+}
+.background {
+  width: 1918px;
+  opacity: 0.6;
+}
+.welcomebtn {
+  width: 50px;
+  height: 40px;
+  position: absolute;
+  top: 30px;
+  left: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  z-index: 99;
+  transition: 0.2s ease-in;
+  -webkit-transition: 0.2s ease-in;
+}
+#bars {
+  width: 50px;
+  height: 8px;
+  border-radius: 100px;
+  background-color: rgb(150, 150, 150);
+}
+.welcomebtn:hover {
+  transform: scale(1.05, 1.05);
+  -webkit-transform: scale(1.05, 1.05);
+  transition: 0.1s ease-in;
+  -webkit-transition: 0.1s ease-in;
+}
+.welcomebtn:hover #bars {
+  background-color: rgb(85, 85, 85);
+  box-shadow: 0 0 3px rgb(199, 199, 199);
+  transform: scale(1.05, 1.05);
+  -webkit-transform: scale(1.05, 1.05);
+  transition: 0.1s ease-in;
+  -webkit-transition: 0.1s ease-in;
+}
+#triangle {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top: 200px solid white;
+  border-right: 200px solid transparent;
 }
 .register_box {
-  width: 400px;
-  height: 100%;
+  width: 700px;
+  height: 600px;
   position: absolute;
-  left: 65%;
-  top: 50%;
+  left: 50%;
+  top: 45%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: white;
-  box-shadow: 0 0 10px rgb(46, 46, 46);
+  box-shadow: 0 0 5px rgb(201, 201, 201);
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
 }
@@ -209,10 +272,60 @@ export default {
   align-items: center;
 }
 .registerTitle h2 {
-  color: rgb(85, 85, 85);
+  color: rgb(50, 50, 50);
   font-size: 28px;
   letter-spacing: 5px;
   text-indent: 5px;
+}
+#block_outer {
+  width: 21px;
+  height: 21px;
+  position: absolute;
+  top: 51px;
+  background-color: rgb(50, 50, 50);
+}
+#block_outer::before {
+  content: '';
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background-color: white;
+}
+#block_inner {
+  width: 11px;
+  height: 11px;
+  position: absolute;
+  top: 56px;
+  background-color: rgb(50, 50, 50);
+}
+#block_inner::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background-color: white;
+}
+#block_outer:nth-child(1) {
+  left: 240px;
+}
+#block_inner:nth-child(2) {
+  left: 245px;
+}
+#block_outer:nth-child(4) {
+  right: 240px;
+}
+#block_inner:nth-child(5) {
+  right: 245px;
+}
+#block_outer:nth-child(1),
+#block_inner:nth-child(2),
+#block_outer:nth-child(4),
+#block_inner:nth-child(5) {
+  transform: rotateZ(45deg);
 }
 .registerForm {
   width: 100%;
@@ -242,12 +355,12 @@ export default {
   -webkit-transition: 0.1s linear;
 }
 /deep/ .el-input__inner:hover {
-  box-shadow: inset 0 0 8px rgb(189, 189, 189);
+  box-shadow: inset 0 0 6px rgb(189, 189, 189);
   transition: 0.2s linear;
   -webkit-transition: 0.2s linear;
 }
 /deep/ .el-input__inner:focus {
-  box-shadow: inset 0 0 12px rgb(165, 165, 165);
+  box-shadow: inset 0 0 8px rgb(189, 189, 189);
 }
 .register_btn {
   width: 320px;
@@ -259,14 +372,23 @@ export default {
   text-indent: 4px;
   border: none;
   border-radius: 1px;
-  background-color: rgb(85, 85, 85);
+  background: linear-gradient(
+    -20deg,
+    rgb(50, 50, 50) 0%,
+    rgb(70, 70, 70) 60%,
+    rgb(50, 50, 50) 100%
+  );
 }
 .register_btn:hover {
-  background-color: rgb(49, 49, 49);
-  box-shadow: 0 0 3px rgb(49, 49, 49);
+  color: white;
 }
 .register_btn:active {
-  background-color: rgb(85, 85, 85);
+  background: linear-gradient(
+    -20deg,
+    rgb(85, 85, 85) 0%,
+    rgb(100, 100, 100) 60%,
+    rgb(85, 85, 85) 100%
+  );
   box-shadow: none;
 }
 .loginPropt {
@@ -277,7 +399,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 13px;
-  color: rgb(85, 85, 85);
+  color: rgb(50, 50, 50);
 }
 .login_btn {
   width: 80px;
@@ -295,13 +417,23 @@ export default {
   background-color: white;
 }
 .login_btn:hover {
+  color: black;
   font-weight: 700;
+  background: linear-gradient(
+    -10deg,
+    rgb(219, 219, 219) 0%,
+    rgb(255, 255, 255) 100%
+  );
   box-shadow: 1px 2px 7px rgb(167, 167, 167);
 }
 .login_btn:active {
   font-weight: 700;
   color: white;
-  background-color: rgb(85, 85, 85);
+  background: linear-gradient(
+    -10deg,
+    rgb(50, 50, 50) 0%,
+    rgb(100, 100, 100) 100%
+  );
   box-shadow: none;
 }
 </style>

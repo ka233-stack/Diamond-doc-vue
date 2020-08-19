@@ -12,5 +12,5 @@ export default {
 </script>
 
 <style>
- @import './assets/css/font.css'
+@import './assets/css/font.css';
 </style>

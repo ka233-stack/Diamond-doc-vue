@@ -1,5 +1,4 @@
 /* 全局样式表 */
-
 html,
 body,
 #app {
@@ -7,6 +6,50 @@ body,
   margin: 0;
   padding: 0;
 }
+@font-face {
+  font-family: mainfont;
+  src: url(../font/HYRuiHuSongW.ttf);
+}
+body::-webkit-scrollbar {
+  width: 0;
+}
+.ql-snow {
+  width: 1150px;
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  z-index: 96;
+}
+.ql-toolbar.ql-snow {
+  border: none;
+}
+.ql-container {
+  width: 100%;
+  height: auto;
+  position: relative;
+  top: 0;
+  z-index: 59;
+}
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
+  border: none;
+}
+.el-submenu > .el-submenu__title .el-submenu__icon-arrow {
+  position: relative;
+  top: 5px;
+  left: 10px;
+  transform: rotateZ(-90deg);
+  -webkit-transform: rotateZ(-90deg);
+}
+.el-submenu.is-opened > .el-submenu__title .el-submenu__icon-arrow {
+  position: relative;
+  top: 5px;
+  left: 10px;
+  transform: rotateZ(0deg) !important;
+  -webkit-transform: rotateZ(0deg) !important;
+}
 .el-scrollbar__wrap {
   overflow-x: hidden;
 }
+

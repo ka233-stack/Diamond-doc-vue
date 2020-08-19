@@ -10,6 +10,7 @@ import Trash from '../components/Trash.vue'
 import Doc from '../components/Doc.vue'
 import Space from '../components/Space.vue'
 import Profile from '../components/Profile.vue'
+import Help from '../components/Help.vue'
 
 Vue.use(VueRouter)
 
@@ -19,19 +20,32 @@ const routes = [
   // 将根路径重定向到/welcome
   { path: '/', redirect: '/welcome' },
   // 将Welcome组件渲染到/welcome
-  { path: '/welcome', meta: { title: '金刚石文档' }, component: Welcome },
+  {
+    path: '/welcome',
+    meta: { title: '黑石文档' },
+    component: Welcome
+  },
   // 将Login组件渲染到/login
-  { path: '/login', meta: { title: '登录页-金刚石文档' }, component: Login },
+  {
+    path: '/login',
+    meta: { title: '登录页-黑石文档' },
+    component: Login
+  },
   // 将Register组件渲染到/register
   {
     path: '/register',
-    meta: { title: '注册页-金刚石文档' },
+    meta: { title: '注册页-黑石文档' },
     component: Register
   },
   // 将Profile组件渲染到/profile
   {
     path: '/profile',
-    meta: { title: '个人信息页-金刚石文档' },
+    meta: { title: '个人信息页-黑石文档' },
+    component: Profile
+  },
+  {
+    path: '/profile/:id',
+    meta: { title: '用户信息页-黑石文档' },
     component: Profile
   },
   // 将Home组件渲染到/home
@@ -44,31 +58,41 @@ const routes = [
       // 将Dashboard子组件渲染到/dashboard
       {
         path: '/dashboard',
-        meta: { title: '工作台 - 金刚石文档' },
+        meta: { title: '工作台 - 黑石文档' },
         component: Dashboard
       },
       // 将Desktop子组件渲染到/desktop
       {
         path: '/desktop',
-        meta: { title: '我的桌面 - 金刚石文档' },
+        meta: { title: '我的桌面 - 黑石文档' },
         component: Desktop
       },
       // 将Trash组件渲染到/trash
       {
         path: '/trash',
-        meta: { title: '回收站 - 金刚石文档' },
+        meta: { title: '回收站 - 黑石文档' },
         component: Trash
       },
       // 将Space组件渲染到/space/id
       {
         path: '/space/:id',
-        meta: { title: '团队空间 - 金刚石文档' },
+        meta: { title: '团队空间 - 黑石文档' },
         component: Space
       }
     ]
   },
   // 将Doc组件渲染到/doc
-  { path: '/doc/:id', meta: { title: '文档编辑页 - 金刚石文档' }, component: Doc }
+  {
+    path: '/doc/:id',
+    meta: { title: '文档编辑页 - 黑石文档' },
+    component: Doc
+  },
+  // 将Help组件渲染到/help
+  {
+    path: '/help',
+    meta: { title: '帮助中心-黑石文档' },
+    component: Help
+  }
 ]
 
 const router = new VueRouter({

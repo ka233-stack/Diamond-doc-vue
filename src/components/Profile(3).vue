@@ -120,12 +120,13 @@
             name="img"
             accept="image/jpeg,image/jpg,image/png"
           >
-            <img :src="'http://127.0.0.1:8000' + userInfo.image" alt="用户头像" />
+            <img
+              :src="'http://127.0.0.1:8000' + userInfo.image"
+              alt="用户头像"
+            />
           </el-upload>
-          <div class="avatar-remind" v-if="isSelf">
-            <span>点击头像可修改</span>
-            <p></p>
-            <span>（支持jpg、png格式）</span>
+          <div v-if="isSelf">
+            <span>点击头像可修改（支持jpg、png格式）</span>
           </div>
           <div v-else>
             <img
