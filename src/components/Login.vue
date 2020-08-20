@@ -1,6 +1,10 @@
 <template>
   <el-container>
-    <img class="background" src="../assets/img/lg_backsrc.png" alt="background" />
+    <img
+      class="background"
+      src="../assets/img/lg_backsrc.png"
+      alt="background"
+    />
     <!-- 头部区域-->
     <el-header>
       <div class="welcomebtn" @click="gotoWelcome">
@@ -32,7 +36,11 @@
           >
             <!-- 用户名 -->
             <el-form-item prop="username">
-              <el-input v-model="loginForm.username" prefix-icon="el-icon-user" placeholder="用户名"></el-input>
+              <el-input
+                v-model="loginForm.username"
+                prefix-icon="el-icon-user"
+                placeholder="用户名"
+              ></el-input>
             </el-form-item>
             <!-- 密码 -->
             <el-form-item prop="password">

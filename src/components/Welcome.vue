@@ -29,7 +29,7 @@
       </div>
       <div class="intro">
         <span>超越富文本编辑器，面向 doc 与未来的办公软件</span>
-        <img src="../assets/img/shot1.png" alt="shot1">
+        <img src="../assets/img/shot1.png" alt="shot1" />
       </div>
     </el-header>
     <el-main>

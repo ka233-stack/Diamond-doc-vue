@@ -31,6 +31,7 @@
       <el-table
         :data="docList"
         :default-sort="{ prop: 'title', order: 'ascending' }"
+        max-height="600px"
       >
         <!-- 文件名 -->
         <el-table-column
@@ -140,7 +141,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="docListInfo.pageNum"
-        :page-size="10"
+        :page-size="12"
         layout="total, prev, pager, next, jumper"
         :total="docListInfo.total"
       >
@@ -228,7 +229,8 @@ export default {
       // 消息提示
       var token = window.sessionStorage.getItem('token')
       var patchform = {
-        delete: '0'
+        delete: '0',
+        noweditor: null
       }
       const { data: res } = await this.$http.patch(
         '/doc/' + doc.id + '/?token=' + token,
@@ -254,7 +256,8 @@ export default {
     async deleteDoc(doc) {
       var token = window.sessionStorage.getItem('token')
       var patchform = {
-        delete: '2'
+        delete: '2',
+        noweditor: null
       }
       const { data: res } = await this.$http.patch(
         '/doc/' + doc.id + '/?token=' + token,

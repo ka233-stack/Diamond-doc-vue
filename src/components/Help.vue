@@ -78,7 +78,7 @@
             <el-button id="iconbtn" circle>
               <img
                 class="icon"
-                :src="'http://127.0.0.1:8000' + image"
+                :src="'http://123.57.67.128:8000' + image"
                 alt="用户头像"
               />
             </el-button>

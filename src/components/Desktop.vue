@@ -27,13 +27,14 @@
       <el-table
         :data="docList"
         :default-sort="{ prop: 'title', order: 'ascending' }"
+        max-height="600px"
       >
         <!-- 文件名 -->
         <el-table-column
           prop="title"
           label="文件名"
           sortable
-          width="220"
+          width="180"
           align="left"
           header-align="left"
         >
@@ -52,7 +53,7 @@
         <el-table-column
           prop="nickname"
           label="创建者"
-          width="200"
+          width="160"
           align="center"
           header-align="center"
         ></el-table-column>
@@ -61,7 +62,7 @@
           prop="createtime"
           label="创建时间"
           sortable
-          width="145"
+          width="200"
           align="center"
           header-align="center"
         ></el-table-column>
@@ -70,7 +71,7 @@
           prop="updatetime"
           label="最后编辑时间"
           sortable
-          width="145"
+          width="200"
           align="center"
           header-align="right"
         >
@@ -255,7 +256,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="docListInfo.pageNum"
-        :page-size="10"
+        :page-size="12"
         layout="total, prev, pager, next, jumper"
         :total="docListInfo.total"
       >
@@ -502,7 +503,8 @@ export default {
       // 成功消息提示
       var token = window.sessionStorage.getItem('token')
       var patchform = {
-        title: this.renameDocForm.newName
+        title: this.renameDocForm.newName,
+        noweditor: null
       }
       const { data: res } = await this.$http.patch(
         '/doc/' + this.renameDocForm.userId + '/?token=' + token,
@@ -533,7 +535,8 @@ export default {
       // 消息提示
       var token = window.sessionStorage.getItem('token')
       var patchform = {
-        delete: '1'
+        delete: '1',
+        noweditor: null
       }
       const { data: res } = await this.$http.patch(
         '/doc/' + docInfo.id + '/?token=' + token,
@@ -662,7 +665,7 @@ export default {
   color: rgb(50, 50, 50);
 }
 .doclist {
-  width: 1000px;
+  width: 1100px;
   max-height: 630px;
   margin-bottom: 20px;
 }

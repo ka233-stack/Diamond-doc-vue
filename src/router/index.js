@@ -16,7 +16,7 @@ Vue.use(VueRouter)
 
 const routes = [
   // 将重定向到根路径
-  // { path: '*', redirect: '/' },
+  { path: '*', redirect: '/' },
   // 将根路径重定向到/welcome
   { path: '/', redirect: '/welcome' },
   // 将Welcome组件渲染到/welcome
@@ -106,9 +106,11 @@ router.beforeEach((to, before, next) => {
   // next 是一个函数，表示放行
   // next() 放行  next('/login') 强制跳转到/login
   if (to.path === '/login') return next()
+  else if (to.path === '/register') return next()
+  else if (to.path === '/welcome') return next()
   // 获取token
-  // const tokenStr = window.sessionStorage.getItem('token')
-  // if (!tokenStr) return next('/login')
+  const tokenStr = window.sessionStorage.getItem('token')
+  if (!tokenStr) return next('/login')
   next()
 })
 

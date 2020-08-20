@@ -1,6 +1,10 @@
 <template>
   <el-container>
-    <img class="background" src="../assets/img/rg_backsrc.png" alt="background" />
+    <img
+      class="background"
+      src="../assets/img/rg_backsrc.png"
+      alt="background"
+    />
     <!-- 头部区域-->
     <el-header>
       <div class="welcomebtn" @click="gotoWelcome">
@@ -77,7 +81,9 @@
           <div>已有帐号？</div>
           <!-- 转到登录按钮 -->
           <div>
-            <el-button class="login_btn" type="primary" @click="gotoLogin">立即登录</el-button>
+            <el-button class="login_btn" type="primary" @click="gotoLogin"
+              >立即登录</el-button
+            >
           </div>
         </div>
       </div>
@@ -157,7 +163,7 @@ export default {
           username: this.registerForm.username,
           password: this.registerForm.password1,
           email: this.registerForm.email,
-          image: 'image/avatar.png'
+          image: '/image/avatar.png'
         }
         const { data: res } = await this.$http.post('/register/', postForm)
         // 发送数据并接收返回信息

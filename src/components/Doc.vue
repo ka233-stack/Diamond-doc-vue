@@ -131,7 +131,7 @@
             <el-button id="iconbtn" circle>
               <img
                 class="icon"
-                :src="'http://127.0.0.1:8000' + imgsrc"
+                :src="'http://123.57.67.128:8000' + imgsrc"
                 alt="用户头像"
               />
             </el-button>
@@ -225,7 +225,7 @@
         <div class="comment-container">
           <div class="comment-input">
             <!-- 用户头像 -->
-            <img :src="'http://127.0.0.1:8000' + imgsrc" alt="用户头像" />
+            <img :src="'http://123.57.67.128:8000' + imgsrc" alt="用户头像" />
             <!-- 评论输入框 -->
             <el-input
               type="textarea"
@@ -245,7 +245,7 @@
               <!-- 用户头像 -->
               <div class="user-info">
                 <img
-                  :src="'http://127.0.0.1:8000' + item.commenter.image"
+                  :src="'http://123.57.67.128:8000' + item.commenter.image"
                   alt="用户头像"
                   @click="jumpto(item.commenter.id)"
                 />
@@ -504,6 +504,7 @@ export default {
     this.getDocInfo()
     this.getComment()
     this.getMessage()
+    this.getEditorId()
   },
   methods: {
     // 头部区域---------------------------------------------------------------
@@ -529,6 +530,7 @@ export default {
     backDashborad() {
       // 询问是否保存
       // 跳转
+      this.saveDoc()
       this.$router.push('/home')
     },
 
@@ -545,7 +547,8 @@ export default {
       var token = window.sessionStorage.getItem('token')
       var patchform = {
         content: this.docInfo.content,
-        title: this.docInfo.title
+        title: this.docInfo.title,
+        noweditor: null
       }
       const { data: res } = await this.$http.patch(
         '/doc/' + docId + '/?token=' + token,
@@ -652,7 +655,8 @@ export default {
       var token = window.sessionStorage.getItem('token')
       var docId = this.$route.params.id
       var patchform = {
-        delete: '1'
+        delete: '1',
+        noweditor: null
       }
       const { data: res } = await this.$http.patch(
         '/doc/' + docId + '/?token=' + token,
@@ -830,23 +834,26 @@ export default {
       // 获取信息
       this.getDocInfo()
       var canEdit = false
-      var temp = 0
       var patchform = {
         noweditor: this.userId
       }
+      console.log(this.userId)
+      console.log(this.docInfo.noweditor)
       if (this.docInfo.noweditor !== null) {
         // 人编辑
         // 不能编辑
-        this.$message.error('正在被人编辑1')
-        temp = 1
-        return
+        if (this.docInfo.noweditor.id === this.userId) {
+          canEdit = true
+        } else {
+          this.$message.error('正在被人编辑')
+          return
+        }
       }
       // 判断权限
       if (this.docInfo.auth < 3) {
         if (this.docInfo.hasAuth) {
           // 可以编辑
           canEdit = true
-          temp = 3
         } else {
           // 判断团队内
           const { data: res1 } = await this.$http.get(
@@ -858,19 +865,16 @@ export default {
             if (res1[i].id === this.docInfo.group.id) {
               // 可以编辑
               canEdit = true
-              temp = 2
             }
           }
         }
         // 判断是不是作者
-        temp = 4
       } else {
         canEdit = true
       }
-      console.log(temp)
       // 判断编辑
       if (!canEdit) {
-        this.$message.error('正在被人编辑2')
+        this.$message.error('正在被人编辑')
         return
       }
       // 可以编辑
@@ -910,7 +914,8 @@ export default {
       var token = window.sessionStorage.getItem('token')
       var docId = this.$route.params.id
       var patchform = {
-        title: this.newTitle
+        title: this.newTitle,
+        noweditor: null
       }
       const { data: res } = await this.$http.patch(
         '/doc/' + docId + '/?token=' + token,

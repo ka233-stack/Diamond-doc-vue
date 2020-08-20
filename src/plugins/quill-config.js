@@ -1,5 +1,5 @@
 const uploadConfig = {
-  action: 'http://127.0.0.1:8000/upload/', // 必填参数 图片上传地址
+  action: 'http://123.57.67.128:8000/upload/', // 必填参数 图片上传地址
   methods: 'POST', // 必填参数 图片上传方式
   // token: '', // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
   name: 'img', // 必填参数 文件的参数名
@@ -56,7 +56,7 @@ const handlers = {
         xhr.onload = function(e) {
           if (xhr.status === 200) {
             var res = JSON.parse(xhr.responseText)
-            var img = 'http://127.0.0.1:8000' + res.url
+            var img = 'http://123.57.67.128:8000' + res.url
             var length = self.quill.getSelection(true).index
             self.quill.insertEmbed(length, 'image', img)
             self.quill.setSelection(length + 1)

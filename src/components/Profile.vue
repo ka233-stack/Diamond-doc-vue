@@ -79,7 +79,7 @@
             <el-button id="iconbtn" circle>
               <img
                 class="icon"
-                :src="'http://127.0.0.1:8000' + myImage"
+                :src="'http://123.57.67.128:8000' + myImage"
                 alt="用户头像"
               />
             </el-button>
@@ -112,7 +112,7 @@
           <!-- 头像 -->
           <el-upload
             v-if="isSelf"
-            action="http://127.0.0.1:8000/upload/"
+            action="http://123.57.67.128:8000/upload/"
             :show-file-list="false"
             :on-success="uploadSuccess"
             :before-upload="beforeAvatarUpload"
@@ -120,7 +120,10 @@
             name="img"
             accept="image/jpeg,image/jpg,image/png"
           >
-            <img :src="'http://127.0.0.1:8000' + userInfo.image" alt="用户头像" />
+            <img
+              :src="'http://123.57.67.128:8000' + userInfo.image"
+              alt="用户头像"
+            />
           </el-upload>
           <div class="avatar-remind" v-if="isSelf">
             <span>点击头像可修改</span>
@@ -129,7 +132,7 @@
           </div>
           <div v-else>
             <img
-              :src="'http://127.0.0.1:8000' + userInfo.image"
+              :src="'http://123.57.67.128:8000' + userInfo.image"
               alt="用户头像"
             />
           </div>
